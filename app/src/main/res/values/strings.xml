@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Bulk Billing</string>
+
+    <string name="dlg_ok_btn">OK</string>
+    <string name="dlg_insert_error_title">Insert Error</string>
+    <string name="dlg_insert_title">Insert Success</string>
+    <string name="dlg_read_error_title">Read Error</string>
+    <string name="dlg_insert_success">All records successfully inserted to MAST_OUT table&#8230;</string>
+    <string name="dlg_read_error_msg">Error found while reading the data from MAST_CUST table&#8230; Please check it once again &amp; proceed&#8230;</string>
+    <string name="dlg_insert_out_error_msg">Data did not inserted into MAST_OUT table&#8230; Please check it once again &amp; proceed&#8230;</string>
+    <string name="dlg_insert_old_out_error_msg">Data did not inserted into MAST_OUT_OLD table&#8230; Please check it once again &amp; proceed&#8230;</string>
+    <string name="dlg_insertion">Inserting Data</string>
+    <string name="dlg_insertion_msg">Records are being calculating &amp; updating please wait&#8230;</string>
+    <string name="start_billing_txt">Start Billing</string>
+    <string name="dlg_records_update_title">Records Update</string>
+    <string name="dlg_records_update_msg">All records have been updated completely&#8230;</string>
+    <string name="semi">:</string>
+    <string name="to_bill">To Bill</string>
+    <string name="bills_completed">Completed</string>
+    <string name="total_records">Total Records</string>
+    <string name="column_error_title">Column Error</string>
+    <string name="column_error_msg">column not in the table&#8230; Please update it &amp; proceed&#8230;</string>
+    <string name="bill_reports">Bill Reports</string>
+</resources>

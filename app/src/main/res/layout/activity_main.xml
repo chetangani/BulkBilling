@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <include
+        android:id="@+id/main_toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
+        tools:layout_editor_absoluteX="0dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp8"
+            android:layout_weight="0.75"
+            android:gravity="end"
+            android:text="@string/total_records"
+            android:textSize="@dimen/text18"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:text="@string/semi"/>
+
+        <TextView
+            android:id="@+id/txt_total_records"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp8"
+            android:layout_weight="0.75"
+            android:textSize="@dimen/text18"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/start_bulk_billing_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:layout_marginStart="@dimen/dp16"
+        android:enabled="false"
+        android:text="@string/start_billing_txt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="147dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:layout_marginStart="@dimen/dp16"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/start_bulk_billing_btn"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="190dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp8"
+            android:layout_weight="0.75"
+            android:gravity="end"
+            android:text="@string/to_bill"
+            android:textSize="@dimen/text18"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:text="@string/semi"/>
+
+        <TextView
+            android:id="@+id/txt_to_bill_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp8"
+            android:layout_weight="0.75"
+            android:textSize="@dimen/text18"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_bulk_billing_btn"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="190dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp8"
+            android:layout_weight="0.75"
+            android:gravity="end"
+            android:text="@string/bills_completed"
+            android:textSize="@dimen/text18"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:text="@string/semi"/>
+
+        <TextView
+            android:id="@+id/txt_completed_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp8"
+            android:layout_weight="0.75"
+            android:textSize="@dimen/text18"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bulk_bill_reports_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:layout_marginStart="@dimen/dp16"
+        android:enabled="false"
+        android:text="@string/bill_reports"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/start_bulk_billing_btn"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="147dp"/>
+
+</android.support.constraint.ConstraintLayout>
