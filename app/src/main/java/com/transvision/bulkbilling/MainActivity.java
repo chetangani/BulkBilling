@@ -2,23 +2,27 @@ package com.transvision.bulkbilling;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +32,16 @@ import com.transvision.bulkbilling.extra.FunctionsCall;
 import com.transvision.bulkbilling.values.GetSet_MastCust;
 import com.transvision.bulkbilling.values.GetSet_Mast_Values;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_SUCCESS;
 import static com.transvision.bulkbilling.extra.Constants.COLUMNS_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.DB_FILE_DELETE_SUCCESS;
@@ -49,9 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int DLG_RECORDS_UPDATE = 7;
     private static final int DLG_COLUMNS_ERROR = 8;
     private static final int DLG_NO_RECORDS = 9;
+    private static final int DLG_MR_SELECTION_FILE = 10;
 
-    Button start_btn, bill_reports_btn;
+    Button start_btn, bill_reports_btn, generate_db_btn;
     TextView tv_count, tv_to_bill, tv_completed, tv_records;
+    TextInputEditText et_date;
     GetSet_MastCust getSetMastCust;
     GetSet_Mast_Values getSetMastValues;
     Databasehelper databasehelper;
@@ -112,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.assets_copy_success), Toast.LENGTH_SHORT).show();
                     break;
 
+                case ASSETS_DB_COPY_ERROR:
+                    break;
+
                 case DB_FILE_DELETE_SUCCESS:
                     functionsCall.copyAssets(MainActivity.this, handler);
                     break;
@@ -132,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         start_btn.setOnClickListener(this);
         bill_reports_btn = findViewById(R.id.bulk_bill_reports_btn);
         bill_reports_btn.setOnClickListener(this);
+        generate_db_btn = findViewById(R.id.bulk_generate_db_btn);
+        generate_db_btn.setOnClickListener(this);
         tv_to_bill = findViewById(R.id.txt_to_bill_count);
         tv_to_bill.setText("0");
         tv_completed = findViewById(R.id.txt_completed_count);
@@ -161,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bulk_bill_reports_btn:
                 Intent intent = new Intent(MainActivity.this, ReportsActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.bulk_generate_db_btn:
+                showdialog(DLG_MR_SELECTION_FILE);
                 break;
         }
     }
@@ -400,13 +422,79 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(View v) {
                         alertDialog.dismiss();
-                        finish();
+                        generate_db_btn.setEnabled(true);
+                    }
+                });
+                alertDialog.show();
+                break;
+
+            case DLG_MR_SELECTION_FILE:
+                AlertDialog.Builder mr_file = new AlertDialog.Builder(this);
+                mr_file.setTitle(getResources().getString(R.string.mr_file));
+                @SuppressLint("InflateParams")
+                LinearLayout mr_file_layout = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_login_layout, null);
+                mr_file.setView(mr_file_layout);
+                final int[] date = new int[1];
+                final int[] month = new int[1];
+                final int[] year = new int[1];
+                final TextInputEditText et_mrcode = mr_file_layout.findViewById(R.id.dlg_tiet_mrcode);
+                et_date = mr_file_layout.findViewById(R.id.dlg_tiel_date);
+                Button btn_file = functionsCall.btn_id(mr_file_layout, R.id.dialog_positive_btn);
+                et_date.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar cal = Calendar.getInstance();
+                        year[0] = cal.get(Calendar.YEAR);
+                        month[0] = cal.get(Calendar.MONTH);
+                        date[0] = cal.get(Calendar.DAY_OF_MONTH);
+                        DatePickerDialog dp = new DatePickerDialog(MainActivity.this, dateSetListener, year[0], month[0], date[0]);
+                        Calendar min_cal = Calendar.getInstance();
+                        min_cal.set(year[0], month[0], 1);
+                        dp.getDatePicker().setMinDate(min_cal.getTimeInMillis());
+                        dp.getDatePicker().setMaxDate(cal.getTimeInMillis());
+                        dp.show();
+                    }
+                });
+                alertDialog = mr_file.create();
+                btn_file.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (TextUtils.isEmpty(et_mrcode.getText())) {
+                            et_mrcode.setError(getResources().getString(R.string.mrcode_enter_valid));
+                            return;
+                        }
+                        if (et_mrcode.getText().length() != 8) {
+                            et_mrcode.setError(getResources().getString(R.string.mrcode_valid));
+                            return;
+                        }
+                        if (TextUtils.isEmpty(et_date.getText())) {
+                            et_date.setError(getResources().getString(R.string.billing_date_valid));
+                            return;
+                        }
+                        alertDialog.dismiss();
                     }
                 });
                 alertDialog.show();
                 break;
         }
     }
+
+    private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            Date Starttime = null;
+            et_date.setText("");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+            try {
+                Starttime = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse((""+ dayOfMonth + "/" + ""+ (monthOfYear + 1) + "/" + ""+year));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String dateselected = sdf.format(Starttime);
+            et_date.setText(dateselected);
+            et_date.setSelection(et_date.getText().length());
+        }
+    };
 
     @Override
     protected void onDestroy() {

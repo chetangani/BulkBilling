@@ -62,10 +62,9 @@
         tools:layout_editor_absoluteX="147dp"/>
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp16"
-        android:layout_marginStart="@dimen/dp16"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/start_bulk_billing_btn"
         app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
@@ -148,5 +147,17 @@
         app:layout_constraintTop_toBottomOf="@+id/start_bulk_billing_btn"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="147dp"/>
+
+    <Button
+        android:id="@+id/bulk_generate_db_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:layout_marginStart="@dimen/dp16"
+        android:enabled="false"
+        android:text="@string/generate_db_btn"
+        app:layout_constraintBottom_toTopOf="@+id/start_bulk_billing_btn"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        tools:layout_editor_absoluteX="148dp"/>
 
 </android.support.constraint.ConstraintLayout>

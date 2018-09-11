@@ -2,6 +2,11 @@ package com.transvision.bulkbilling.extra;
 
 public class Constants {
 
+    public static String FTP_HOST = "ftp2.hescomtrm.com";
+    public static String FTP_USER = "TRMFTP01";
+    public static String FTP_PASS = "TrmFTp1$";
+    public static final int FTP_PORT = 21;
+
     public static final String DIR_DATABASE = "databases";
     public static final String DIR_APK = "ApkFolder";
     public static final String DIR_DOWNLOAD = "DownloadFolder";
@@ -30,4 +35,10 @@ public class Constants {
     public static final int ASSETS_DB_COPY_SUCCESS = 6;
     public static final int ASSETS_DB_COPY_ERROR = 7;
     public static final int DB_FILE_DELETE_SUCCESS = 8;
+    public static final int UPLOAD_BILLED_FILE_FOUND = 9;
+    public static final int UPLOAD_BILLED_FILE_NOT_FOUND = 10;
+    public static final int MAST_CUST_FILE_DOWNLOADED = 11;
+    public static final int MAST_CUST_FILE_UPDATED = 12;
+    public static final int MAST_OUT_FILE_DOWNLOADED = 13;
+    public static final int MAST_OUT_FILE_UPDATED = 14;
 }

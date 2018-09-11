@@ -26,6 +26,14 @@
     <string name="no_records_msg">No Records found to bill&#8230; Please update it &amp; proceed&#8230;</string>
     <string name="delete_db_menu">Delete DB</string>
     <string name="assets_copy_success">Backup DB file generated successfully&#8230;</string>
+    <string name="generate_db_btn">Generate DB</string>
+    <string name="mr_login">MRCode</string>
+    <string name="test_db_date">DB test date</string>
+    <string name="db_data">Get DB Data</string>
+    <string name="mr_file">MR File</string>
+    <string name="mrcode_enter_valid">Enter MRCode</string>
+    <string name="mrcode_valid">Enter Valid MRCode</string>
+    <string name="billing_date_valid">Select date to get data</string>
 
     <string name="billing_report_name">NAME</string>
     <string name="billing_report_account_id">ACCOUNT ID</string>

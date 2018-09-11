@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp16"
+        android:layout_marginStart="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp8">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/dlg_tiet_mrcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/mr_login"
+            android:inputType="number"
+            android:maxLength="8"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp16"
+        android:layout_marginEnd="@dimen/dp16"
+        android:layout_marginStart="@dimen/dp16"
+        android:layout_marginTop="@dimen/dp4">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/dlg_tiel_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
+            android:hint="@string/test_db_date"
+            android:inputType="text"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <include layout="@layout/dialog_buttons_layout"/>
+</LinearLayout>
