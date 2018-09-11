@@ -2,6 +2,7 @@ package com.transvision.bulkbilling;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Handler;
@@ -13,10 +14,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.transvision.bulkbilling.database.Databasehelper;
 import com.transvision.bulkbilling.extra.FunctionsCall;
@@ -26,7 +31,9 @@ import com.transvision.bulkbilling.values.GetSet_Mast_Values;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_SUCCESS;
 import static com.transvision.bulkbilling.extra.Constants.COLUMNS_ERROR;
+import static com.transvision.bulkbilling.extra.Constants.DB_FILE_DELETE_SUCCESS;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OLD_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_SUCCESS;
@@ -41,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int DLG_PROGRESS = 6;
     private static final int DLG_RECORDS_UPDATE = 7;
     private static final int DLG_COLUMNS_ERROR = 8;
+    private static final int DLG_NO_RECORDS = 9;
 
     Button start_btn, bill_reports_btn;
     TextView tv_count, tv_to_bill, tv_completed, tv_records;
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         progress_dialog.dismiss();
                         start_btn.setEnabled(false);
+                        bill_reports_btn.setEnabled(true);
                         showdialog(DLG_INSERT_SUCCESSFULLY);
                     }
                     break;
@@ -96,6 +105,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case COLUMNS_ERROR:
                     progress_dialog.dismiss();
                     showdialog(DLG_COLUMNS_ERROR);
+                    break;
+
+                case ASSETS_DB_COPY_SUCCESS:
+                    enable_btn();
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.assets_copy_success), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case DB_FILE_DELETE_SUCCESS:
+                    functionsCall.copyAssets(MainActivity.this, handler);
                     break;
             }
             return false;
@@ -141,33 +159,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.bulk_bill_reports_btn:
+                Intent intent = new Intent(MainActivity.this, ReportsActivity.class);
+                startActivity(intent);
                 break;
         }
     }
 
-    @SuppressLint("DefaultLocale")
-    private void enable_btn() {
-        start_btn.setEnabled(true);
-        databasehelper = new Databasehelper(MainActivity.this);
-        databasehelper.openDatabase();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater mi = getMenuInflater();
+        mi.inflate(R.menu.main_bulk_menu, menu);
+        return true;
+    }
 
-        Cursor data = databasehelper.getData();
-        max_count = data.getCount();
-        data.close();
-        tv_to_bill.setText(String.format("%d", max_count));
-        tv_records.setText(String.format("%d", max_count));
-
-        Cursor out_data = databasehelper.billed();
-        if (out_data.getCount() > 0) {
-            tv_to_bill.setText(String.format("%d", (max_count - out_data.getCount())));
-            tv_completed.setText(String.format("%d", out_data.getCount()));
-            read_count = out_data.getCount() + 1;
-            if (out_data.getCount() == max_count || out_data.getCount() > max_count) {
-                start_btn.setEnabled(false);
-                showdialog(DLG_RECORDS_UPDATE);
-            }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_bulk_db_delete:
+                databasehelper.db_delete(handler);
+                return true;
         }
-        out_data.close();
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void enable_btn() {
+        databasehelper = new Databasehelper(MainActivity.this);
+        if (databasehelper.openDatabase())
+            initial_data();
+        else functionsCall.copyAssets(this, handler);
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void initial_data() {
+        Cursor data = databasehelper.getData();
+        if (data.getCount() > 0) {
+            start_btn.setEnabled(true);
+            max_count = data.getCount();
+            data.close();
+            tv_to_bill.setText(String.format("%d", max_count));
+            tv_records.setText(String.format("%d", max_count));
+
+            Cursor out_data = databasehelper.billed();
+            if (out_data.getCount() > 0) {
+                tv_to_bill.setText(String.format("%d", (max_count - out_data.getCount())));
+                tv_completed.setText(String.format("%d", out_data.getCount()));
+                read_count = out_data.getCount() + 1;
+                if (out_data.getCount() == max_count || out_data.getCount() > max_count) {
+                    start_btn.setEnabled(false);
+                    bill_reports_btn.setEnabled(true);
+                    showdialog(DLG_RECORDS_UPDATE);
+                }
+            }
+            out_data.close();
+        } else {
+            data.close();
+            showdialog(DLG_NO_RECORDS);
+        }
     }
 
     @TargetApi(23)
@@ -337,6 +384,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(View v) {
                         alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+                break;
+
+            case DLG_NO_RECORDS:
+                AlertDialog.Builder no_records = new AlertDialog.Builder(this);
+                no_records.setTitle(getResources().getString(R.string.no_records));
+                no_records.setCancelable(false);
+                no_records.setView(dialog_layout);
+                tv_msg.setText(getResources().getString(R.string.no_records_msg));
+                alertDialog = no_records.create();
+                btn_positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                        finish();
                     }
                 });
                 alertDialog.show();

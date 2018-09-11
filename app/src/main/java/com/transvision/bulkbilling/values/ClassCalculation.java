@@ -157,24 +157,7 @@ public class ClassCalculation {
 
     // ---------------------------- Function to Calculate Fixed Charges ----------------------------
     public void FcCalculation(Cursor c, String dbtvalue, double dl_count, int a) {
-        Double testdouble = Double.parseDouble(sanctionKw1);
-        double KW;
-        if (testdouble < 1) {
-            KW = 1;
-        } else {
-            if (StringUtils.startsWithIgnoreCase(dbtvalue, "4"))
-                KW = testdouble;
-            else {
-                if (sanctionKw1.contains(".")) {
-                    String test1 = sanctionKw1.substring(0, sanctionKw1.lastIndexOf('.'));
-                    String test2 = sanctionKw1.substring(sanctionKw1.lastIndexOf('.')+1, sanctionKw1.length());
-                    Double test3 = Double.parseDouble(test2);
-                    if (test3 > 0) {
-                        KW = (Double.parseDouble(test1) + 1);
-                    } else KW = testdouble;
-                } else KW = testdouble;
-            }
-        }
+        double KW = getSancKW(dbtvalue);
         if (!tariff.equals("70")) {
             double HP = Double.parseDouble(santionHp1);
             if (dbtvalue.equals("4")) {
@@ -183,45 +166,11 @@ public class ClassCalculation {
             } else if (tariff.equals("40") || tariff.equals("41") || tariff.equals("42") || tariff.equals("43") || tariff.equals("50")
                     || tariff.equals("51") || tariff.equals("52") || tariff.equals("53") || tariff.equals("60")) {
                 if (HP > 0) {
-                    String santHp = "" + HP;
-                    String santHp1 = santHp.substring(0, santHp.lastIndexOf('.'));
-                    String santHp2 = santHp.substring(santHp.lastIndexOf('.') + 1);
-                    int santHp3;
-                    if (santHp2.length() == 1) {
-                        santHp3 = Integer.parseInt(santHp2 + "0");
-                    } else santHp3 = Integer.parseInt(santHp2);
-                    if (santHp3 >= 0 && santHp3 <= 12) {
-                        KW = Double.parseDouble(santHp1 + "." + "00");
-                    } else if (santHp3 > 12 && santHp3 <= 37) {
-                        KW = Double.parseDouble(santHp1 + "." + "25");
-                    } else if (santHp3 > 37 && santHp3 <= 62) {
-                        KW = Double.parseDouble(santHp1 + "." + "50");
-                    } else if (santHp3 > 62 && santHp3 <= 87) {
-                        KW = Double.parseDouble(santHp1 + "." + "75");
-                    } else KW = Double.parseDouble(santHp1 + "." + "00") + 1;
+                    KW = quaterly_roundoff(""+HP);
                 }
             }
             if (KW == 0) {
-                if (HP != 0) {
-                    KW = HP * 0.746;
-                    String loadkw = String.valueOf(KW);
-                    if (loadkw.contains(".")) {
-                        String loadkw1 = loadkw.substring(0, loadkw.lastIndexOf('.'));
-                        String loadkw2 = loadkw.substring(loadkw.lastIndexOf('.')+1, loadkw.length());
-                        int loadkw3 = Integer.parseInt(loadkw2);
-                        if (loadkw3 >= 0 && loadkw3 <= 12) {
-                            KW = Double.parseDouble(loadkw);
-                        } else if (loadkw3 > 12 && loadkw3 <= 37) {
-                            KW = (Double.parseDouble(loadkw1) + 0.25);
-                        } else if (loadkw3 > 37 && loadkw3 <= 62) {
-                            KW = (Double.parseDouble(loadkw1) + 0.50);
-                        } else if (loadkw3 > 62 && loadkw3 <= 87) {
-                            KW = (Double.parseDouble(loadkw1) + 0.75);
-                        } else if (loadkw3 > 87) {
-                            KW = (Double.parseDouble(loadkw) + 1);
-                        }
-                    }
-                }
+                KW = getSancHP();
             }
             double remKW = 0;
             fcall.logStatus("Reading Cursor");
@@ -348,6 +297,60 @@ public class ClassCalculation {
                 arrFC[1] = days * cal_days * KW;
             }
         }
+    }
+
+    private double getSancKW(String dbtvalue) {
+        Double testdouble = Double.parseDouble(sanctionKw1);
+        double KW;
+        if (StringUtils.startsWithIgnoreCase(dbtvalue, "4")) {
+            KW = testdouble;
+        } else {
+            if (testdouble < 1) {
+                /*if (Double.parseDouble(santionHp1) > 0)
+                    KW = getSancHP();
+                else KW = 1;*/
+                KW = 1;
+            }
+            else {
+                if (sanctionKw1.contains(".")) {
+                    String test1 = sanctionKw1.substring(0, sanctionKw1.lastIndexOf('.'));
+                    String test2 = sanctionKw1.substring(sanctionKw1.lastIndexOf('.')+1, sanctionKw1.length());
+                    Double test3 = Double.parseDouble(test2);
+                    if (test3 > 0) {
+                        KW = (Double.parseDouble(test1) + 1);
+                    } else KW = testdouble;
+                } else KW = testdouble;
+            }
+        }
+        return KW;
+    }
+
+    private double getSancHP() {
+        double KW;
+        double HP = Double.parseDouble(santionHp1);
+        if (HP > 0) {
+            KW = quaterly_roundoff(String.valueOf(fcall.getBigdecimal(HP * 0.746, 2)));
+        } else KW = 0;
+        return KW;
+    }
+
+    private double quaterly_roundoff(String loadkw) {
+        double KW;
+        if (loadkw.contains(".")) {
+            String loadkw1 = loadkw.substring(0, loadkw.lastIndexOf('.'));
+            String loadkw2 = loadkw.substring(loadkw.lastIndexOf('.')+1, loadkw.length());
+            int loadkw3 = Integer.parseInt(loadkw2);
+            if (loadkw3 >= 0 && loadkw3 <= 12) {
+                KW = Double.parseDouble(loadkw1);
+            } else if (loadkw3 > 12 && loadkw3 <= 37) {
+                KW = (Double.parseDouble(loadkw1) + 0.25);
+            } else if (loadkw3 > 37 && loadkw3 <= 62) {
+                KW = (Double.parseDouble(loadkw1) + 0.50);
+            } else if (loadkw3 > 62 && loadkw3 <= 87) {
+                KW = (Double.parseDouble(loadkw1) + 0.75);
+            } else KW = (Double.parseDouble(loadkw1) + 1);
+        } else KW = Double.parseDouble(loadkw);
+        return KW;
     }
 
     private void fc_slab_less_calculation(int i, double dl_count, double remKW, double intFrate) {
@@ -482,6 +485,12 @@ public class ClassCalculation {
 
     // -------------------------- Function to Calculate BMD Penalties --------------------------
     public double bmdPenalities(double bmdValue, String invenload, String pfflag, String bmdkw, String dbtvalue) {
+        double sanckw = Double.parseDouble(bmdkw);
+        if (sanckw == 0) {
+            if (Double.parseDouble(sanctionKw1) != 0)
+                bmdkw = String.valueOf(getSancKW(dbtvalue));
+            else bmdkw = String.valueOf(getSancHP());
+        }
         if (pfflag.equals("0")) {
             double load = Double.parseDouble(invenload);
             if (Double.parseDouble(invenload) > 0) {
@@ -508,31 +517,12 @@ public class ClassCalculation {
             }
             double load4 = Double.parseDouble(num.format(load2 - load3));
             if (load4 > 0) {
-                String load5 = "" + load4;
-                String load6 = load5.substring(0, load5.lastIndexOf('.'));
-                String load8 = load5.substring(load5.lastIndexOf('.') + 1);
-                int load7;
-                if (load8.length() == 1) {
-                    load7 = Integer.parseInt(load8 + "0");
-                } else load7 = Integer.parseInt(load8);
                 double fcdouble;
                 if (tariff.equals("20") || tariff.equals("21") || tariff.equals("23"))
                     fcdouble = Double.parseDouble(loadfrate) * 2;
                 else fcdouble = arrFrate[1] * 2;
-                if (load7 >= 0 && load7 <= 12) {
-                    bmdPenalty = Double.parseDouble(load6) * fcdouble;
-                } else if (load7 > 12 && load7 <= 37) {
-                    bmdPenalty = (Double.parseDouble(load6) + 0.25) * fcdouble;
-                } else if (load7 > 37 && load7 <= 62) {
-                    bmdPenalty = (Double.parseDouble(load6) + 0.50) * fcdouble;
-                } else if (load7 > 62 && load7 <= 87) {
-                    bmdPenalty = (Double.parseDouble(load6) + 0.75) * fcdouble;
-                } else if (load7 > 87) {
-                    bmdPenalty = (Double.parseDouble(load6) + 1) * fcdouble;
-                }
-            } else {
-                bmdPenalty = 0.00;
-            }
+                bmdPenalty = quaterly_roundoff(""+load4) * fcdouble;
+            } else bmdPenalty = 0.00;
         }
         return bmdPenalty;
     }
@@ -688,16 +678,18 @@ public class ClassCalculation {
     }
 
     // ---------------------- Function for Extra Charges in the Bill like Taxes,Penalties ----------------------
-    public void billExtraCharges(Cursor c) {
+    public void billExtraCharges(String pres_date, String prev_date, GetSet_MastCust getSetValues, Databasehelper databasehelper, Cursor c) {
         if (!flagRebate.equals("3")) {
-            String taxPer = c.getString(c.getColumnIndex("TAX_PER"));
-            double intTaxPer = Double.parseDouble(taxPer);
+            /*String taxPer = c.getString(c.getColumnIndex("TAX_PER"));
+            double intTaxPer = Double.parseDouble(taxPer);*/
             if (!tariff.equals("10")) {
-                dblTax = EC * intTaxPer;
+                dblTax = fcall.getTaxStatus(pres_date, prev_date, getSetValues, databasehelper, c, EC);
+//                dblTax = EC * intTaxPer;
             } else {
                 double readUnits = Double.parseDouble(Readingconsume);
                 if (readUnits > 40) {
-                    dblTax = EC * intTaxPer;
+                    dblTax = fcall.getTaxStatus(pres_date, prev_date, getSetValues, databasehelper, c, EC);
+//                    dblTax = EC * intTaxPer;
                 } else dblTax = 0.00;
             }
         } else dblTax = 0.00;
@@ -725,11 +717,13 @@ public class ClassCalculation {
         double refpfValue;
         if (pfValue > 0.85) {
             refpfValue = 0.85;
-        } else if (pfValue < 0.70) {
-            if (pfValue == 0) {
-                refpfValue = 0;
-            } else refpfValue = 0.70;
-        } else refpfValue = pfValue;
+        } else {
+            if (pfValue < 0.70) {
+                if (pfValue == 0) {
+                    refpfValue = 0;
+                } else refpfValue = 0.70;
+            } else refpfValue = pfValue;
+        }
         if (refpfValue < 0.85) {
             if (refpfValue == 0) {
                 finalPfPenalitiy = 0;
@@ -903,10 +897,6 @@ public class ClassCalculation {
 
     public double pfPenality() {
         return finalPfPenalitiy;
-    }
-
-    public String consumeUnits() {
-        return valueOf(Units);
     }
 
     public double[] erateForTextViews_old() {

@@ -21,4 +21,19 @@
     <string name="column_error_title">Column Error</string>
     <string name="column_error_msg">column not in the table&#8230; Please update it &amp; proceed&#8230;</string>
     <string name="bill_reports">Bill Reports</string>
+    <string name="bill_report_details">Bill Report Details</string>
+    <string name="no_records">Records</string>
+    <string name="no_records_msg">No Records found to bill&#8230; Please update it &amp; proceed&#8230;</string>
+    <string name="delete_db_menu">Delete DB</string>
+    <string name="assets_copy_success">Backup DB file generated successfully&#8230;</string>
+
+    <string name="billing_report_name">NAME</string>
+    <string name="billing_report_account_id">ACCOUNT ID</string>
+    <string name="billing_report_rrno">RRNO</string>
+    <string name="billing_report_pres_rdg">PRES RDG</string>
+    <string name="billing_report_units">UNITS</string>
+    <string name="billing_report_payable">PAYABLE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

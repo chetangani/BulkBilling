@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -51,6 +54,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_ERROR;
+import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_SUCCESS;
+import static com.transvision.bulkbilling.extra.Constants.DIR_DATABASE;
 import static com.transvision.bulkbilling.extra.Constants.NEW_TARRIF_CALCULATION;
 import static com.transvision.bulkbilling.extra.Constants.OLD_TARRIF_CALCULATION;
 import static com.transvision.bulkbilling.extra.Constants.SPLIT_TARRIF_CALCULATION;
@@ -346,6 +352,43 @@ public class FunctionsCall {
             dir.mkdirs();
         }
         return new File(dir, File.separator + file);
+    }
+
+    public void copyAssets(Context context, Handler handler) {
+        AssetManager assetManager = context.getAssets();
+        String[] files = null;
+        try {
+            files = assetManager.list("Files");
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
+
+        assert files != null;
+        for(String filename : files) {
+            System.out.println("File name => "+filename);
+            InputStream in;
+            OutputStream out;
+            try {
+                in = assetManager.open("Files/"+filename);   // if files resides inside the "Files" directory itself
+                out = new FileOutputStream(filepath(DIR_DATABASE));
+                copyFile(in, out);
+                in.close();
+                out.flush();
+                out.close();
+                handler.sendEmptyMessage(ASSETS_DB_COPY_SUCCESS);
+            } catch(Exception e) {
+                Log.e("debug", e.getMessage());
+                handler.sendEmptyMessage(ASSETS_DB_COPY_ERROR);
+            }
+        }
+    }
+
+    private void copyFile(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while((read = in.read(buffer)) != -1){
+            out.write(buffer, 0, read);
+        }
     }
 
     private String trm_backup1() {

@@ -16,6 +16,7 @@ public class Constants {
     public static final String FILE_TXT_FORMAT = ".txt";
     public static final String DIR_FTP_APK = "/Android/Apk/";
     public static final String DIR_FTP_DOWNLOAD = "/Android/BILLING/DOWNLOAD_DB_FILES/";
+    public static final String SEARCH_ID = "search_content";
 
     public static final String OLD_TARRIF_CALCULATION = "old";
     public static final String NEW_TARRIF_CALCULATION = "new";
@@ -26,4 +27,7 @@ public class Constants {
     public static final int INSERT_MAST_OLD_OUT_ERROR = 3;
     public static final int READ_MAST_CUST_ERROR = 4;
     public static final int COLUMNS_ERROR = 5;
+    public static final int ASSETS_DB_COPY_SUCCESS = 6;
+    public static final int ASSETS_DB_COPY_ERROR = 7;
+    public static final int DB_FILE_DELETE_SUCCESS = 8;
 }

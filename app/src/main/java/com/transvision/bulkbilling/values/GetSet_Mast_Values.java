@@ -360,7 +360,7 @@ public class GetSet_Mast_Values {
             calculation.billPenalties(current_data, getSetMastCust.getUnits());
         }
         getSetMastCust.setPF_PENALTY(""+calculation.pfPenality());
-        calculation.billExtraCharges(current_data);
+        calculation.billExtraCharges(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), getSetMastCust, databasehelper, current_data);
         getSetMastCust.setBMD_PENALTY(""+calculation.bmdPenalities(functionsCall.convert_decimal(getSetMastCust.getBMDVAL()),
                 getSetMastCust.getINVENTORY_LOAD(), getSetMastCust.getPF_FLAG(), getSetMastCust.getBMDKW(), getSetMastCust.getREBATE_FLAG()));
         if (getSetMastCust.getTARIFF().equals("70")) {
