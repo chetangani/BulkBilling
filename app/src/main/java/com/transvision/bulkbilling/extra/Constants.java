@@ -21,6 +21,7 @@ public class Constants {
     public static final String FILE_TXT_FORMAT = ".txt";
     public static final String DIR_FTP_APK = "/Android/Apk/";
     public static final String DIR_FTP_DOWNLOAD = "/Android/BILLING/DOWNLOAD_DB_FILES/";
+    public static final String DIR_FTP_UPLOAD = "/Android/BILLING/UPLOADED_DB_FILES/";
     public static final String SEARCH_ID = "search_content";
 
     public static final String OLD_TARRIF_CALCULATION = "old";

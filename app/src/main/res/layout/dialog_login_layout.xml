@@ -16,6 +16,7 @@
             android:id="@+id/dlg_tiet_mrcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:hint="@string/mr_login"
             android:inputType="number"
             android:maxLength="8"/>
@@ -34,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="false"
+            android:gravity="center"
             android:hint="@string/test_db_date"
             android:inputType="text"/>
     </android.support.design.widget.TextInputLayout>

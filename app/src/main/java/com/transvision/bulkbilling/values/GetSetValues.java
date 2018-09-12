@@ -1,7 +1,7 @@
 package com.transvision.bulkbilling.values;
 
 public class GetSetValues {
-    private String slno="", billed_account_id="", billed_pres_rdg="", billed_units="", billed_payable="";
+    private String slno="", billed_account_id="", billed_pres_rdg="", billed_units="", billed_payable="", download_file_name="";
 
     public GetSetValues() {
     }
@@ -44,5 +44,13 @@ public class GetSetValues {
 
     public void setBilled_payable(String billed_payable) {
         this.billed_payable = billed_payable;
+    }
+
+    public String getDownload_file_name() {
+        return download_file_name;
+    }
+
+    public void setDownload_file_name(String download_file_name) {
+        this.download_file_name = download_file_name;
     }
 }

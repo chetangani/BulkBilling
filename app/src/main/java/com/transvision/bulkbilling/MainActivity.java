@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.transvision.bulkbilling.database.Databasehelper;
 import com.transvision.bulkbilling.extra.FunctionsCall;
+import com.transvision.bulkbilling.ftp.FTPAPI;
+import com.transvision.bulkbilling.values.GetSetValues;
 import com.transvision.bulkbilling.values.GetSet_MastCust;
 import com.transvision.bulkbilling.values.GetSet_Mast_Values;
 
@@ -45,10 +47,12 @@ import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_SUCCESS;
 import static com.transvision.bulkbilling.extra.Constants.COLUMNS_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.DB_FILE_DELETE_SUCCESS;
+import static com.transvision.bulkbilling.extra.Constants.DIR_FTP_UPLOAD;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OLD_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_SUCCESS;
 import static com.transvision.bulkbilling.extra.Constants.READ_MAST_CUST_ERROR;
+import static com.transvision.bulkbilling.extra.Constants.UPLOAD_BILLED_FILE_FOUND;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int RequestPermissionCode = 1;
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextInputEditText et_date;
     GetSet_MastCust getSetMastCust;
     GetSet_Mast_Values getSetMastValues;
+    GetSetValues getSetValues;
     Databasehelper databasehelper;
     FunctionsCall functionsCall;
     AlertDialog progress_dialog;
@@ -131,6 +136,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case DB_FILE_DELETE_SUCCESS:
                     functionsCall.copyAssets(MainActivity.this, handler);
                     break;
+
+                case UPLOAD_BILLED_FILE_FOUND:
+                    functionsCall.showtoast(MainActivity.this, "Upload file found to download...");
+                    break;
             }
             return false;
         }
@@ -158,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_records.setText("0");
         getSetMastValues = new GetSet_Mast_Values(handler);
         getSetMastCust = new GetSet_MastCust();
+        getSetValues = new GetSetValues();
         functionsCall = new FunctionsCall();
 
         new Handler().postDelayed(new Runnable() {
@@ -440,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 final TextInputEditText et_mrcode = mr_file_layout.findViewById(R.id.dlg_tiet_mrcode);
                 et_date = mr_file_layout.findViewById(R.id.dlg_tiel_date);
                 Button btn_file = functionsCall.btn_id(mr_file_layout, R.id.dialog_positive_btn);
+                btn_file.setText(getResources().getString(R.string.db_data));
                 et_date.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -472,6 +483,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             return;
                         }
                         alertDialog.dismiss();
+                        new Thread(new FTPAPI().new Check_available_file(et_mrcode.getText().toString(),
+                                functionsCall.changedateformat(et_date.getText().toString(), ""), handler,
+                                getSetValues)).start();
                     }
                 });
                 alertDialog.show();
