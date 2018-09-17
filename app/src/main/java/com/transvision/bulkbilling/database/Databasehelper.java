@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Handler;
 
 import com.transvision.bulkbilling.extra.FunctionsCall;
+import com.transvision.bulkbilling.values.GetSet_MastCust;
 
 import java.io.File;
 
@@ -88,6 +89,10 @@ public class Databasehelper extends SQLiteOpenHelper {
 
     public Cursor getData() {
         return myDataBase.query("MAST_CUST", null, null, null, null, null, null);
+    }
+
+    public Cursor getCustData() {
+        return myDataBase.rawQuery("SELECT * FROM MAST_CUST", null);
     }
 
     public Cursor collection_input() {
@@ -250,6 +255,11 @@ public class Databasehelper extends SQLiteOpenHelper {
         return myDataBase.rawQuery("select * from MAST_CUST,BILLING_STATUS where BILLING_STATUS.STATUS_CODE = MAST_CUST.PREVSTAT and MAST_CUST.CONSNO = " + "'" + value + "'", null);
     }
 
+    public boolean insertInCustTable(ContentValues cv1) {
+        long result = myDataBase.insertOrThrow("MAST_CUST", null, cv1);
+        return result != -1;
+    }
+
     public boolean insertInTable(ContentValues cv1) {
         long result = myDataBase.insertOrThrow("MAST_OUT", null, cv1);
         return result != -1;
@@ -367,6 +377,19 @@ public class Databasehelper extends SQLiteOpenHelper {
         Cursor data;
         data = myDataBase.rawQuery("UPDATE MAST_OUT SET PH_NO = '"+ph_no+"' AND AADHAAR = '"+aad_no+"' AND MAIL ='"+mail_id+"' " +
                 "AND ELECTION ='"+election+"' AND RATION='"+ration+"' AND WATER='"+water+"' AND HOUSE_NO='"+house+"' " +
+                "WHERE CONSNO = '"+account_id+"'", null);
+        data.moveToNext();
+        data.close();
+    }
+
+    public void update_out_values(String account_id, GetSet_MastCust getSetMastCust) {
+        Cursor data;
+        data = myDataBase.rawQuery("UPDATE MAST_CUST SET PRES_RDG = '"+getSetMastCust.getPRES_RDG()+"', " +
+                "PRES_STS = '"+getSetMastCust.getPRES_STS()+"', " +
+                "TOD_CURRENT1 = '"+getSetMastCust.getTOD_CURRENT1()+"', " +
+                "TOD_CURRENT3 = '"+getSetMastCust.getTOD_CURRENT3()+"', " +
+                "PFVAL = '"+getSetMastCust.getPFVAL()+"', " +
+                "BMDVAL = '"+getSetMastCust.getBMDVAL()+"' " +
                 "WHERE CONSNO = '"+account_id+"'", null);
         data.moveToNext();
         data.close();

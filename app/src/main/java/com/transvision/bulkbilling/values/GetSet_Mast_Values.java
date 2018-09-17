@@ -65,102 +65,7 @@ public class GetSet_Mast_Values {
             check_data.close();
             Cursor data = databasehelper.getBilledRecordData();
             data.moveToNext();
-            getSetMastCust.setMONTH(functionsCall.getCursorValue(data, "MONTH"));
-            getSetMastCust.setREADDATE(functionsCall.getCursorValue(data, "READDATE"));
-            getSetMastCust.setRRNO(functionsCall.getCursorValue(data, "RRNO"));
-            getSetMastCust.setNAME(functionsCall.getCursorValue(data, "NAME"));
-            getSetMastCust.setADD1(functionsCall.getCursorValue(data, "ADD1"));
-            getSetMastCust.setTARIFF(functionsCall.getCursorValue(data, "TARIFF"));
-            getSetMastCust.setMF(functionsCall.getCursorValue(data, "MF"));
-            getSetMastCust.setPREVSTAT(functionsCall.getCursorValue(data, "PREVSTAT"));
-            getSetMastCust.setAVGCON(functionsCall.getCursorValue(data, "AVGCON"));
-            getSetMastCust.setLINEMIN(functionsCall.getCursorValue(data, "LINEMIN"));
-            getSetMastCust.setSANCHP(functionsCall.getCursorValue(data, "SANCHP"));
-            getSetMastCust.setSANCKW(functionsCall.getCursorValue(data, "SANCKW"));
-            getSetMastCust.setPRVRED(functionsCall.getCursorValue(data, "PRVRED"));
-            getSetMastCust.setFR(functionsCall.getCursorValue(data, "FR"));
-            getSetMastCust.setIR(functionsCall.getCursorValue(data, "IR"));
-            getSetMastCust.setDLCOUNT(functionsCall.getCursorValue(data, "DLCOUNT"));
-            getSetMastCust.setARREARS(functionsCall.getCursorValue(data, "ARREARS"));
-            getSetMastCust.setPF_FLAG(functionsCall.getCursorValue(data, "PF_FLAG"));
-            getSetMastCust.setMRCODE(functionsCall.getCursorValue(data, "MRCODE"));
-            getSetMastCust.setLEGFOL(functionsCall.getCursorValue(data, "LEGFOL"));
-            getSetMastCust.setODDEVEN(functionsCall.getCursorValue(data, "ODDEVEN"));
-            getSetMastCust.setSSNO(functionsCall.getCursorValue(data, "SSNO"));
-            getSetMastCust.setCONSNO(functionsCall.getCursorValue(data, "CONSNO"));
-            getSetMastCust.setREBATE_FLAG(functionsCall.getCursorValue(data, "REBATE_FLAG"));
-            getSetMastCust.setRREBATE(functionsCall.getCursorValue(data, "RREBATE"));
-            getSetMastCust.setEXTRA1(functionsCall.getCursorValue(data, "EXTRA1"));
-            getSetMastCust.setDATA1(functionsCall.getCursorValue(data, "DATA1"));
-            if (getSetMastCust.getFec() != 0.0) {
-                getSetMastCust.setEXTRA2("FAC");
-            } else getSetMastCust.setEXTRA2(functionsCall.getCursorValue(data, "EXTRA2"));
-            getSetMastCust.setDATA2(functionsCall.getCursorValue(data, "DATA2"));
-            getSetMastCust.setDEPOSIT(functionsCall.getCursorValue(data, "DEPOSIT"));
-            getSetMastCust.setMTRDIGIT(functionsCall.getCursorValue(data, "MTRDIGIT"));
-            getSetMastCust.setPFVAL(functionsCall.getCursorValue(data, "PFVAL"));
-            getSetMastCust.setBMDVAL(functionsCall.getCursorValue(data, "BMDVAL"));
-            getSetMastCust.setASDAMT(functionsCall.getCursorValue(data, "ASDAMT"));
-            getSetMastCust.setIODAMT(functionsCall.getCursorValue(data, "IODAMT"));
-            getSetMastCust.setINTEREST_AMT(functionsCall.getCursorValue(data, "INTEREST_AMT"));
-            getSetMastCust.setCAP_FLAG(functionsCall.getCursorValue(data, "CAP_FLAG"));
-            getSetMastCust.setTOD_FLAG(functionsCall.getCursorValue(data, "TOD_FLAG"));
-            getSetMastCust.setTOD_PREVIOUS1(functionsCall.getCursorValue(data, "TOD_PREVIOUS1"));
-            getSetMastCust.setTOD_PREVIOUS3(functionsCall.getCursorValue(data, "TOD_PREVIOUS3"));
-            getSetMastCust.setINT_ON_DEP(functionsCall.getCursorValue(data, "INT_ON_DEP"));
-            getSetMastCust.setSO_FEEDER_TC_POLE(functionsCall.getCursorValue(data, "SO_FEEDER_TC_POLE"));
-            getSetMastCust.setTARIFF_NAME(functionsCall.getCursorValue(data, "TARIFF_NAME"));
-            getSetMastCust.setPREV_READ_DATE(functionsCall.getCursorValue(data, "PREV_READ_DATE"));
-            getSetMastCust.setBILL_DAYS(functionsCall.getCursorValue(data, "BILL_DAYS"));
-            getSetMastCust.setMTR_SERIAL_NO(functionsCall.getCursorValue(data, "MTR_SERIAL_NO"));
-            getSetMastCust.setCHQ_DISSHONOUR_FLAG(functionsCall.getCursorValue(data, "CHQ_DISSHONOUR_FLAG"));
-            getSetMastCust.setCHQ_DISHONOUR_DATE(functionsCall.getCursorValue(data, "CHQ_DISHONOUR_DATE"));
-            getSetMastCust.setFDRNAME(functionsCall.getCursorValue(data, "FDRNAME"));
-            getSetMastCust.setTCCODE(functionsCall.getCursorValue(data, "TCCODE"));
-            getSetMastCust.setMTR_FLAG(functionsCall.getCursorValue(data, "MTR_FLAG"));
-            getSetMastCust.setHP(functionsCall.getCursorValue(data, "HP"));
-            getSetMastCust.setBMDKW(functionsCall.getCursorValue(data, "BMDKW"));
-            getSetMastCust.setCONNLDHP(functionsCall.getCursorValue(data, "CONNLDHP"));
-            getSetMastCust.setCONNLDKW(functionsCall.getCursorValue(data, "CONNLDKW"));
-            getSetMastCust.setCREADJ(functionsCall.getCursorValue(data, "CREADJ"));
-            getSetMastCust.setREADKVAH(functionsCall.getCursorValue(data, "READKVAH"));
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "PH_NO"))) {
-                getSetMastCust.setPH_NO(functionsCall.getCursorValue(data, "PH_NO"));
-            } else getSetMastCust.setPH_NO("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "AADHAAR"))) {
-                getSetMastCust.setAADHAAR(functionsCall.getCursorValue(data, "AADHAAR"));
-            } else getSetMastCust.setAADHAAR("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "MAIL"))) {
-                getSetMastCust.setMAIL(functionsCall.getCursorValue(data, "MAIL"));
-            } else getSetMastCust.setMAIL("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "GPS_LAT"))) {
-                getSetMastCust.setGPS_LAT(functionsCall.getCursorValue(data, "GPS_LAT"));
-            } else getSetMastCust.setGPS_LAT("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "GPS_LONG"))) {
-                getSetMastCust.setGPS_LONG(functionsCall.getCursorValue(data, "GPS_LONG"));
-            } else getSetMastCust.setGPS_LONG("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "ELECTION"))) {
-                getSetMastCust.setELECTION(functionsCall.getCursorValue(data, "ELECTION"));
-            } else getSetMastCust.setELECTION("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "RATION"))) {
-                getSetMastCust.setRATION(functionsCall.getCursorValue(data, "RATION"));
-            } else getSetMastCust.setRATION("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "WATER"))) {
-                getSetMastCust.setWATER(functionsCall.getCursorValue(data, "WATER"));
-            } else getSetMastCust.setWATER("0");
-            if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "HOUSE_NO"))) {
-                getSetMastCust.setHOUSE_NO(functionsCall.getCursorValue(data, "HOUSE_NO"));
-            } else getSetMastCust.setHOUSE_NO("0");
-            try {
-                if (functionsCall.getCursorValue(data, "INVENTORY_LOAD") == null)
-                    getSetMastCust.setINVENTORY_LOAD("0");
-                else getSetMastCust.setINVENTORY_LOAD(functionsCall.getCursorValue(data, "INVENTORY_LOAD"));
-            } catch (CursorIndexOutOfBoundsException | NullPointerException e) {
-                e.printStackTrace();
-                getSetMastCust.setINVENTORY_LOAD("0");
-            }
-            getSetMastCust.setFDRCODE(functionsCall.getCursorValue(data, "FDRCODE"));
-            getSetMastCust.setTCNAME(functionsCall.getCursorValue(data, "TCNAME"));
+            set_Mast_Cust_values(data, getSetMastCust);
             if (check_column(data, "PRES_RDG")) {
                 getSetMastCust.setColumn_name("PRES_RDG");
                 handler.sendEmptyMessage(COLUMNS_ERROR);
@@ -193,6 +98,105 @@ public class GetSet_Mast_Values {
             e.printStackTrace();
             handler.sendEmptyMessage(READ_MAST_CUST_ERROR);
         }
+    }
+
+    public void set_Mast_Cust_values(Cursor data, GetSet_MastCust getSetMastCust) {
+        getSetMastCust.setMONTH(functionsCall.getCursorValue(data, "MONTH"));
+        getSetMastCust.setREADDATE(functionsCall.getCursorValue(data, "READDATE"));
+        getSetMastCust.setRRNO(functionsCall.getCursorValue(data, "RRNO"));
+        getSetMastCust.setNAME(functionsCall.getCursorValue(data, "NAME"));
+        getSetMastCust.setADD1(functionsCall.getCursorValue(data, "ADD1"));
+        getSetMastCust.setTARIFF(functionsCall.getCursorValue(data, "TARIFF"));
+        getSetMastCust.setMF(functionsCall.getCursorValue(data, "MF"));
+        getSetMastCust.setPREVSTAT(functionsCall.getCursorValue(data, "PREVSTAT"));
+        getSetMastCust.setAVGCON(functionsCall.getCursorValue(data, "AVGCON"));
+        getSetMastCust.setLINEMIN(functionsCall.getCursorValue(data, "LINEMIN"));
+        getSetMastCust.setSANCHP(functionsCall.getCursorValue(data, "SANCHP"));
+        getSetMastCust.setSANCKW(functionsCall.getCursorValue(data, "SANCKW"));
+        getSetMastCust.setPRVRED(functionsCall.getCursorValue(data, "PRVRED"));
+        getSetMastCust.setFR(functionsCall.getCursorValue(data, "FR"));
+        getSetMastCust.setIR(functionsCall.getCursorValue(data, "IR"));
+        getSetMastCust.setDLCOUNT(functionsCall.getCursorValue(data, "DLCOUNT"));
+        getSetMastCust.setARREARS(functionsCall.getCursorValue(data, "ARREARS"));
+        getSetMastCust.setPF_FLAG(functionsCall.getCursorValue(data, "PF_FLAG"));
+        getSetMastCust.setMRCODE(functionsCall.getCursorValue(data, "MRCODE"));
+        getSetMastCust.setLEGFOL(functionsCall.getCursorValue(data, "LEGFOL"));
+        getSetMastCust.setODDEVEN(functionsCall.getCursorValue(data, "ODDEVEN"));
+        getSetMastCust.setSSNO(functionsCall.getCursorValue(data, "SSNO"));
+        getSetMastCust.setCONSNO(functionsCall.getCursorValue(data, "CONSNO"));
+        getSetMastCust.setREBATE_FLAG(functionsCall.getCursorValue(data, "REBATE_FLAG"));
+        getSetMastCust.setRREBATE(functionsCall.getCursorValue(data, "RREBATE"));
+        getSetMastCust.setEXTRA1(functionsCall.getCursorValue(data, "EXTRA1"));
+        getSetMastCust.setDATA1(functionsCall.getCursorValue(data, "DATA1"));
+        if (getSetMastCust.getFec() != 0.0) {
+            getSetMastCust.setEXTRA2("FAC");
+        } else getSetMastCust.setEXTRA2(functionsCall.getCursorValue(data, "EXTRA2"));
+        getSetMastCust.setDATA2(functionsCall.getCursorValue(data, "DATA2"));
+        getSetMastCust.setDEPOSIT(functionsCall.getCursorValue(data, "DEPOSIT"));
+        getSetMastCust.setMTRDIGIT(functionsCall.getCursorValue(data, "MTRDIGIT"));
+        getSetMastCust.setPFVAL(functionsCall.getCursorValue(data, "PFVAL"));
+        getSetMastCust.setBMDVAL(functionsCall.getCursorValue(data, "BMDVAL"));
+        getSetMastCust.setASDAMT(functionsCall.getCursorValue(data, "ASDAMT"));
+        getSetMastCust.setIODAMT(functionsCall.getCursorValue(data, "IODAMT"));
+        getSetMastCust.setINTEREST_AMT(functionsCall.getCursorValue(data, "INTEREST_AMT"));
+        getSetMastCust.setCAP_FLAG(functionsCall.getCursorValue(data, "CAP_FLAG"));
+        getSetMastCust.setTOD_FLAG(functionsCall.getCursorValue(data, "TOD_FLAG"));
+        getSetMastCust.setTOD_PREVIOUS1(functionsCall.getCursorValue(data, "TOD_PREVIOUS1"));
+        getSetMastCust.setTOD_PREVIOUS3(functionsCall.getCursorValue(data, "TOD_PREVIOUS3"));
+        getSetMastCust.setINT_ON_DEP(functionsCall.getCursorValue(data, "INT_ON_DEP"));
+        getSetMastCust.setSO_FEEDER_TC_POLE(functionsCall.getCursorValue(data, "SO_FEEDER_TC_POLE"));
+        getSetMastCust.setTARIFF_NAME(functionsCall.getCursorValue(data, "TARIFF_NAME"));
+        getSetMastCust.setPREV_READ_DATE(functionsCall.getCursorValue(data, "PREV_READ_DATE"));
+        getSetMastCust.setBILL_DAYS(functionsCall.getCursorValue(data, "BILL_DAYS"));
+        getSetMastCust.setMTR_SERIAL_NO(functionsCall.getCursorValue(data, "MTR_SERIAL_NO"));
+        getSetMastCust.setCHQ_DISSHONOUR_FLAG(functionsCall.getCursorValue(data, "CHQ_DISSHONOUR_FLAG"));
+        getSetMastCust.setCHQ_DISHONOUR_DATE(functionsCall.getCursorValue(data, "CHQ_DISHONOUR_DATE"));
+        getSetMastCust.setFDRNAME(functionsCall.getCursorValue(data, "FDRNAME"));
+        getSetMastCust.setTCCODE(functionsCall.getCursorValue(data, "TCCODE"));
+        getSetMastCust.setMTR_FLAG(functionsCall.getCursorValue(data, "MTR_FLAG"));
+        getSetMastCust.setHP(functionsCall.getCursorValue(data, "HP"));
+        getSetMastCust.setBMDKW(functionsCall.getCursorValue(data, "BMDKW"));
+        getSetMastCust.setCONNLDHP(functionsCall.getCursorValue(data, "CONNLDHP"));
+        getSetMastCust.setCONNLDKW(functionsCall.getCursorValue(data, "CONNLDKW"));
+        getSetMastCust.setCREADJ(functionsCall.getCursorValue(data, "CREADJ"));
+        getSetMastCust.setREADKVAH(functionsCall.getCursorValue(data, "READKVAH"));
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "PH_NO"))) {
+            getSetMastCust.setPH_NO(functionsCall.getCursorValue(data, "PH_NO"));
+        } else getSetMastCust.setPH_NO("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "AADHAAR"))) {
+            getSetMastCust.setAADHAAR(functionsCall.getCursorValue(data, "AADHAAR"));
+        } else getSetMastCust.setAADHAAR("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "MAIL"))) {
+            getSetMastCust.setMAIL(functionsCall.getCursorValue(data, "MAIL"));
+        } else getSetMastCust.setMAIL("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "GPS_LAT"))) {
+            getSetMastCust.setGPS_LAT(functionsCall.getCursorValue(data, "GPS_LAT"));
+        } else getSetMastCust.setGPS_LAT("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "GPS_LONG"))) {
+            getSetMastCust.setGPS_LONG(functionsCall.getCursorValue(data, "GPS_LONG"));
+        } else getSetMastCust.setGPS_LONG("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "ELECTION"))) {
+            getSetMastCust.setELECTION(functionsCall.getCursorValue(data, "ELECTION"));
+        } else getSetMastCust.setELECTION("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "RATION"))) {
+            getSetMastCust.setRATION(functionsCall.getCursorValue(data, "RATION"));
+        } else getSetMastCust.setRATION("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "WATER"))) {
+            getSetMastCust.setWATER(functionsCall.getCursorValue(data, "WATER"));
+        } else getSetMastCust.setWATER("0");
+        if (!TextUtils.isEmpty(functionsCall.getCursorValue(data, "HOUSE_NO"))) {
+            getSetMastCust.setHOUSE_NO(functionsCall.getCursorValue(data, "HOUSE_NO"));
+        } else getSetMastCust.setHOUSE_NO("0");
+        try {
+            if (functionsCall.getCursorValue(data, "INVENTORY_LOAD") == null)
+                getSetMastCust.setINVENTORY_LOAD("0");
+            else getSetMastCust.setINVENTORY_LOAD(functionsCall.getCursorValue(data, "INVENTORY_LOAD"));
+        } catch (CursorIndexOutOfBoundsException | NullPointerException e) {
+            e.printStackTrace();
+            getSetMastCust.setINVENTORY_LOAD("0");
+        }
+        getSetMastCust.setFDRCODE(functionsCall.getCursorValue(data, "FDRCODE"));
+        getSetMastCust.setTCNAME(functionsCall.getCursorValue(data, "TCNAME"));
     }
 
     private boolean check_column(Cursor data, String column) {

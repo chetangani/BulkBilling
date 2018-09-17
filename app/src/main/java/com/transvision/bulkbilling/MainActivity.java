@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.transvision.bulkbilling.database.Databasehelper;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 import com.transvision.bulkbilling.ftp.FTPAPI;
+import com.transvision.bulkbilling.values.Bulk_Reading;
 import com.transvision.bulkbilling.values.GetSetValues;
 import com.transvision.bulkbilling.values.GetSet_MastCust;
 import com.transvision.bulkbilling.values.GetSet_Mast_Values;
@@ -47,10 +48,15 @@ import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_SUCCESS;
 import static com.transvision.bulkbilling.extra.Constants.COLUMNS_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.DB_FILE_DELETE_SUCCESS;
-import static com.transvision.bulkbilling.extra.Constants.DIR_FTP_UPLOAD;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OLD_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_SUCCESS;
+import static com.transvision.bulkbilling.extra.Constants.MAST_CUST_FILE_DOWNLOADED;
+import static com.transvision.bulkbilling.extra.Constants.MAST_CUST_FILE_EXTRACTED;
+import static com.transvision.bulkbilling.extra.Constants.MAST_CUST_FILE_UPDATED;
+import static com.transvision.bulkbilling.extra.Constants.MAST_OUT_FILE_DOWNLOADED;
+import static com.transvision.bulkbilling.extra.Constants.MAST_OUT_FILE_EXTRACTED;
+import static com.transvision.bulkbilling.extra.Constants.MAST_OUT_FILE_UPDATED;
 import static com.transvision.bulkbilling.extra.Constants.READ_MAST_CUST_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.UPLOAD_BILLED_FILE_FOUND;
 
@@ -65,9 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int DLG_COLUMNS_ERROR = 8;
     private static final int DLG_NO_RECORDS = 9;
     private static final int DLG_MR_SELECTION_FILE = 10;
+    private static final int DLG_PROGRESS_UPDATE = 11;
 
     Button start_btn, bill_reports_btn, generate_db_btn;
-    TextView tv_count, tv_to_bill, tv_completed, tv_records;
+    TextView tv_count, tv_to_bill, tv_completed, tv_records, tv_dlg_update;
     TextInputEditText et_date;
     GetSet_MastCust getSetMastCust;
     GetSet_Mast_Values getSetMastValues;
@@ -126,6 +133,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case ASSETS_DB_COPY_SUCCESS:
+                    bill_reports_btn.setEnabled(false);
+                    start_btn.setEnabled(false);
+                    tv_to_bill.setText("0");
+                    tv_completed.setText("0");
+                    tv_records.setText("0");
                     enable_btn();
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.assets_copy_success), Toast.LENGTH_SHORT).show();
                     break;
@@ -139,6 +151,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 case UPLOAD_BILLED_FILE_FOUND:
                     functionsCall.showtoast(MainActivity.this, "Upload file found to download...");
+                    tv_dlg_update.setText(getResources().getString(R.string.dlg_progress_msg_2));
+                    new Thread(new FTPAPI().new Download_file(getSetValues.getDownload_file_name(), getSetValues.getSelected_mr(),
+                            getSetValues.getSelected_date(), handler, true, getSetValues)).start();
+                    break;
+
+                case MAST_CUST_FILE_DOWNLOADED:
+                    functionsCall.showtoast(MainActivity.this, "Mast_Cust file downloaded...");
+                    functionsCall.extract_file(getSetValues, handler);
+                    break;
+
+                case MAST_OUT_FILE_DOWNLOADED:
+                    functionsCall.showtoast(MainActivity.this, "Mast_Out file downloaded...");
+                    functionsCall.extract_file(getSetValues, handler);
+                    break;
+
+                case MAST_CUST_FILE_EXTRACTED:
+                    new Bulk_Reading().read_cust_values(MainActivity.this, databasehelper, handler);
+                    break;
+
+                case MAST_OUT_FILE_EXTRACTED:
+                    new Bulk_Reading().read_out_values(MainActivity.this, databasehelper, handler);
+                    break;
+
+                case MAST_CUST_FILE_UPDATED:
+                    functionsCall.showtoast(MainActivity.this, "Mast_Cust file updated successfully...");
+                    new Thread(new FTPAPI().new Download_file(getSetValues.getDownload_file_name(), getSetValues.getSelected_mr(),
+                            getSetValues.getSelected_date(), handler, false, getSetValues)).start();
+                    break;
+
+                case MAST_OUT_FILE_UPDATED:
+                    functionsCall.showtoast(MainActivity.this, "Mast_Out file updated successfully...");
+                    generate_db_btn.setEnabled(false);
+                    progress_dialog.dismiss();
+                    initial_data();
                     break;
             }
             return false;
@@ -165,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_completed.setText("0");
         tv_records = findViewById(R.id.txt_total_records);
         tv_records.setText("0");
-        getSetMastValues = new GetSet_Mast_Values(handler);
         getSetMastCust = new GetSet_MastCust();
         getSetValues = new GetSetValues();
         functionsCall = new FunctionsCall();
@@ -183,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.start_bulk_billing_btn:
                 showprogress(DLG_PROGRESS);
+                getSetMastValues = new GetSet_Mast_Values(handler);
                 getSetMastValues.getvalues(getSetMastCust, databasehelper);
                 break;
 
@@ -312,6 +358,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 tv_msg.setText(getResources().getString(R.string.dlg_insertion_msg));
                 update_count(max_count, read_count);
                 progress_dialog = progress.create();
+                progress_dialog.show();
+                break;
+
+            case DLG_PROGRESS_UPDATE:
+                AlertDialog.Builder progress_update = new AlertDialog.Builder(this);
+                progress_update.setTitle(getResources().getString(R.string.dlg_progress_update));
+                progress_update.setCancelable(false);
+                @SuppressLint("InflateParams")
+                LinearLayout layout_update = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_progress_update, null);
+                tv_dlg_update = functionsCall.text_id(layout_update, R.id.txt_update_msg);
+                tv_dlg_update.setText(getResources().getString(R.string.dlg_progress_msg_1));
+                progress_update.setView(layout_update);
+                progress_dialog = progress_update.create();
                 progress_dialog.show();
                 break;
         }
@@ -483,9 +542,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             return;
                         }
                         alertDialog.dismiss();
+                        getSetValues.setSelected_mr(et_mrcode.getText().toString());
+                        getSetValues.setSelected_date(functionsCall.changedateformat(et_date.getText().toString(), ""));
                         new Thread(new FTPAPI().new Check_available_file(et_mrcode.getText().toString(),
                                 functionsCall.changedateformat(et_date.getText().toString(), ""), handler,
                                 getSetValues)).start();
+                        showprogress(DLG_PROGRESS_UPDATE);
                     }
                 });
                 alertDialog.show();

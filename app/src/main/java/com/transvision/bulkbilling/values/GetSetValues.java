@@ -1,7 +1,9 @@
 package com.transvision.bulkbilling.values;
 
 public class GetSetValues {
-    private String slno="", billed_account_id="", billed_pres_rdg="", billed_units="", billed_payable="", download_file_name="";
+    private String slno="", billed_account_id="", billed_pres_rdg="", billed_units="", billed_payable="", download_file_name="",
+            selected_mr="", selected_date="";
+    private boolean billing_file = false;
 
     public GetSetValues() {
     }
@@ -52,5 +54,29 @@ public class GetSetValues {
 
     public void setDownload_file_name(String download_file_name) {
         this.download_file_name = download_file_name;
+    }
+
+    public String getSelected_mr() {
+        return selected_mr;
+    }
+
+    public void setSelected_mr(String selected_mr) {
+        this.selected_mr = selected_mr;
+    }
+
+    public String getSelected_date() {
+        return selected_date;
+    }
+
+    public void setSelected_date(String selected_date) {
+        this.selected_date = selected_date;
+    }
+
+    public boolean isBilling_file() {
+        return billing_file;
+    }
+
+    public void setBilling_file(boolean billing_file) {
+        this.billing_file = billing_file;
     }
 }

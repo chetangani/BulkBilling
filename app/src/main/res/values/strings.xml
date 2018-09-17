@@ -11,6 +11,9 @@
     <string name="dlg_insert_old_out_error_msg">Data did not inserted into MAST_OUT_OLD table&#8230; Please check it once again &amp; proceed&#8230;</string>
     <string name="dlg_insertion">Inserting Data</string>
     <string name="dlg_insertion_msg">Records are being calculating &amp; updating please wait&#8230;</string>
+    <string name="dlg_progress_update">Getting Data</string>
+    <string name="dlg_progress_msg_1">Checking file in server please wait&#8230;</string>
+    <string name="dlg_progress_msg_2">Updating records please wait&#8230;</string>
     <string name="start_billing_txt">Start Billing</string>
     <string name="dlg_records_update_title">Records Update</string>
     <string name="dlg_records_update_msg">All records have been updated completely&#8230;</string>

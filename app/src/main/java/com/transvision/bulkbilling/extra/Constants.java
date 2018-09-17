@@ -15,6 +15,8 @@ public class Constants {
     public static final String DIR_UPLOAD_IMAGES = "ImagesUploaded";
     public static final String DIR_TEXT_FILE = "Textfile";
     public static final String FILE_DATABASE = "mydb.db";
+    public static final String FILE_BULK_DATABASE = "bulk_db.db";
+    public static final String FILE_BULK_JOURNAL = "bulk_db.db-journal";
     public static final String FILE_DATABASE_JOURNAL = "mydb.db-journal";
     public static final String FILE_ZIP_FORMAT = ".zip";
     public static final String FILE_DB_FORMAT = ".db";
@@ -40,6 +42,8 @@ public class Constants {
     public static final int UPLOAD_BILLED_FILE_NOT_FOUND = 10;
     public static final int MAST_CUST_FILE_DOWNLOADED = 11;
     public static final int MAST_CUST_FILE_UPDATED = 12;
-    public static final int MAST_OUT_FILE_DOWNLOADED = 13;
-    public static final int MAST_OUT_FILE_UPDATED = 14;
+    public static final int MAST_CUST_FILE_EXTRACTED = 13;
+    public static final int MAST_OUT_FILE_DOWNLOADED = 14;
+    public static final int MAST_OUT_FILE_UPDATED = 15;
+    public static final int MAST_OUT_FILE_EXTRACTED = 16;
 }

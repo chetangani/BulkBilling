@@ -33,6 +33,9 @@ import com.transvision.bulkbilling.database.Databasehelper;
 import com.transvision.bulkbilling.values.GetSetValues;
 import com.transvision.bulkbilling.values.GetSet_MastCust;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,6 +60,9 @@ import java.util.regex.Pattern;
 import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_SUCCESS;
 import static com.transvision.bulkbilling.extra.Constants.DIR_DATABASE;
+import static com.transvision.bulkbilling.extra.Constants.FILE_BULK_DATABASE;
+import static com.transvision.bulkbilling.extra.Constants.MAST_CUST_FILE_EXTRACTED;
+import static com.transvision.bulkbilling.extra.Constants.MAST_OUT_FILE_EXTRACTED;
 import static com.transvision.bulkbilling.extra.Constants.NEW_TARRIF_CALCULATION;
 import static com.transvision.bulkbilling.extra.Constants.OLD_TARRIF_CALCULATION;
 import static com.transvision.bulkbilling.extra.Constants.SPLIT_TARRIF_CALCULATION;
@@ -320,7 +326,7 @@ public class FunctionsCall {
         return IMEI + "_" + date + "_DWN";
     }*/
 
-    public String Appfoldername() {
+    private String Appfoldername() {
         return "TRM_Bulk_Billing" + File.separator + "data";
     }
 
@@ -370,7 +376,8 @@ public class FunctionsCall {
             OutputStream out;
             try {
                 in = assetManager.open("Files/"+filename);   // if files resides inside the "Files" directory itself
-                out = new FileOutputStream(filepath(DIR_DATABASE));
+                File outFile = new File(filepath(DIR_DATABASE), filename);
+                out = new FileOutputStream(outFile);
                 copyFile(in, out);
                 in.close();
                 out.flush();
@@ -518,6 +525,7 @@ public class FunctionsCall {
             if (findimage.equals(ConsumerID)) {
                 File file = new File(folderpath + File.separator + filepath);
                 if (file.isFile()) {
+                    //noinspection ResultOfMethodCallIgnored
                     file.delete();
                 }
             }
@@ -1636,5 +1644,40 @@ public class FunctionsCall {
             dbl_tax_new = energy_charges * tax_days_diff_new * new_tax;
             return dbl_tax_old + dbl_tax_new;
         }
+    }
+
+    public void extract_file(GetSetValues getSetValues, Handler handler) {
+        String source = filepath(DIR_DATABASE) + File.separator + getSetValues.getDownload_file_name();
+        String destination = filepath(DIR_DATABASE) + File.separator;
+        String password = "12345";
+        String file_name = getSetValues.getDownload_file_name().substring(getSetValues.getDownload_file_name().indexOf('.')+1,
+                getSetValues.getDownload_file_name().length());
+        if (file_name.contentEquals("zip")) {
+            try {
+                ZipFile zipFile = new ZipFile(source);
+                if (zipFile.isEncrypted()) {
+                    zipFile.setPassword(password);
+                }
+                zipFile.extractAll(destination);
+                rename_file(getSetValues, handler);
+            } catch (ZipException e) {
+                e.printStackTrace();
+            }
+        } else rename_file(getSetValues, handler);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void rename_file(GetSetValues getSetValues, Handler handler) {
+        String file_name = getSetValues.getDownload_file_name().substring(0, getSetValues.getDownload_file_name().indexOf('.'));
+        File fromfile = new File(filepath(DIR_DATABASE) + File.separator + file_name+".db");
+        File tofile = new File(filepath(DIR_DATABASE) + File.separator + FILE_BULK_DATABASE);
+        if (fromfile.exists())
+            fromfile.renameTo(tofile);
+        File delete_file = new File(filepath(DIR_DATABASE) + File.separator + getSetValues.getDownload_file_name());
+        if (delete_file.exists())
+            delete_file.delete();
+        if (getSetValues.isBilling_file())
+            handler.sendEmptyMessage(MAST_CUST_FILE_EXTRACTED);
+        else handler.sendEmptyMessage(MAST_OUT_FILE_EXTRACTED);
     }
 }
