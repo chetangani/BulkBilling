@@ -227,6 +227,7 @@ public class FTPAPI {
                         boolean isFile = ftpFiles[i].isFile();
                         if (isFile) {
                             functionsCall.logStatus("Main_Download_file "+"Download_file: " + find_regex(namefile));
+                            functionsCall.logStatus("Main_Download_file "+"Download_file name: " + namefile);
                             if (find_regex(namefile).equals(mrcode)) {
                                 filefound = true;
                                 getSetValues.setDownload_file_name(namefile);
@@ -239,14 +240,14 @@ public class FTPAPI {
                 }
                 if (filefound) {
                     try {
-                        fos = new FileOutputStream(download_path + file_name);
+                        fos = new FileOutputStream(download_path + getSetValues.getDownload_file_name());
                         functionsCall.logStatus("Main_Download"+" 14");
                     }
                     catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                     try {
-                        file_download = ftp_1.retrieveFile(server_path + file_name, fos);
+                        file_download = ftp_1.retrieveFile(server_path + getSetValues.getDownload_file_name(), fos);
                         functionsCall.logStatus("Main_Download"+" 15");
                     }
                     catch (IOException e) {
