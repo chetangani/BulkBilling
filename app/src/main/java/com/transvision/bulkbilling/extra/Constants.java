@@ -46,4 +46,5 @@ public class Constants {
     public static final int MAST_OUT_FILE_DOWNLOADED = 14;
     public static final int MAST_OUT_FILE_UPDATED = 15;
     public static final int MAST_OUT_FILE_EXTRACTED = 16;
+    public static final int SUBDIV_DETAILS_INSERT_ERROR = 17;
 }

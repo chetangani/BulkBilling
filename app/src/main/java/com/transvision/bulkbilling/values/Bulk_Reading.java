@@ -11,6 +11,7 @@ import com.transvision.bulkbilling.extra.FunctionsCall;
 
 import static com.transvision.bulkbilling.extra.Constants.MAST_CUST_FILE_UPDATED;
 import static com.transvision.bulkbilling.extra.Constants.MAST_OUT_FILE_UPDATED;
+import static com.transvision.bulkbilling.extra.Constants.SUBDIV_DETAILS_INSERT_ERROR;
 
 public class Bulk_Reading {
 
@@ -25,11 +26,20 @@ public class Bulk_Reading {
                 insert_values(databasehelper, getSetMastCust);
             }
             data.close();
-            bulkDatabase.close();
-            bulkDatabase.db_delete();
-            bulkDatabase.db_delete_journal();
-            handler.sendEmptyMessage(MAST_CUST_FILE_UPDATED);
+            if (read_insert_subdiv_details(bulkDatabase, databasehelper, handler)) {
+                delete_bulk(bulkDatabase);
+                handler.sendEmptyMessage(MAST_CUST_FILE_UPDATED);
+            } else {
+                delete_bulk(bulkDatabase);
+                handler.sendEmptyMessage(SUBDIV_DETAILS_INSERT_ERROR);
+            }
         }
+    }
+
+    private void delete_bulk(Bulk_Database bulkDatabase) {
+        bulkDatabase.close();
+        bulkDatabase.db_delete();
+        bulkDatabase.db_delete_journal();
     }
 
     private void insert_values(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
@@ -138,5 +148,13 @@ public class Bulk_Reading {
         }
     }
 
-
+    private boolean read_insert_subdiv_details(Bulk_Database bulkDatabase, Databasehelper databasehelper, Handler handler) {
+        GetSet_MastCust getSetMastCust = new GetSet_MastCust();
+        Cursor data = bulkDatabase.getSubdivision_details();
+        data.moveToNext();
+        GetSet_Mast_Values getSetMastValues = new GetSet_Mast_Values(handler);
+        getSetMastValues.set_Subdiv_Details(data, getSetMastCust);
+        data.close();
+        return getSetMastValues.insert_subdiv_details(databasehelper, getSetMastCust);
+    }
 }

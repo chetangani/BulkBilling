@@ -1579,6 +1579,11 @@ public class FunctionsCall {
         return Double.parseDouble(value);
     }
 
+    public String decimal_format(String value) {
+        DecimalFormat num = new DecimalFormat("##0.00");
+        return num.format(Double.parseDouble(value));
+    }
+
     public int convert_int(String value) {
         return Integer.parseInt(value);
     }

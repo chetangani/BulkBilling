@@ -68,4 +68,8 @@ public class Bulk_Database extends SQLiteOpenHelper {
     public Cursor getBulk_outRecords(String acct_id) {
         return myDataBase.rawQuery("SELECT * FROM MAST_OUT WHERE CONSNO ='"+acct_id+"'", null);
     }
+
+    public Cursor getSubdivision_details() {
+        return myDataBase.rawQuery("SELECT * FROM SUBDIV_DETAILS", null);
+    }
 }

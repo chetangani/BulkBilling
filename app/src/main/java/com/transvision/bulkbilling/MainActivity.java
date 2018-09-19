@@ -146,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case DB_FILE_DELETE_SUCCESS:
+                    read_count=1;
+                    max_count=0;
                     functionsCall.copyAssets(MainActivity.this, handler);
                     break;
 

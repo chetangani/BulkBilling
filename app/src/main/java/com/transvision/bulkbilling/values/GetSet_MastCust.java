@@ -9,10 +9,15 @@ public class GetSet_MastCust {
             INT_ON_DEP, SO_FEEDER_TC_POLE, TARIFF_NAME, PREV_READ_DATE, BILL_DAYS, MTR_SERIAL_NO, CHQ_DISSHONOUR_FLAG, CHQ_DISHONOUR_DATE,
             FDRNAME, TCCODE, MTR_FLAG, INVENTORY_LOAD, HP, BMDKW, CONNLDHP, CONNLDKW, CREADJ, READKVAH, GPS_LAT, TOD_CHARGES,
             GPS_LONG, AADHAAR, MAIL, ELECTION, RATION, WATER, HOUSE_NO, FDRCODE, TCNAME, PRES_RDG, PRES_STS, TOD_CURRENT1, TOD_CURRENT3,
-            units, FIX, ENGCHG, REBATE_AMOUNT, TAX_AMOUNT, BMD_PENALTY, PF_PENALTY, PAYABLE, GOK_SUBSIDY, DEM_REVENUE,
+            units, FIX, ENGCHG, REBATE_AMOUNT, TAX_AMOUNT, BMD_PENALTY, PF_PENALTY, PAYABLE, GOK_SUBSIDY,
             PAYABLE_REAL, PAYABLE_PROFIT, PAYABLE_LOSS, CHARITABLE_RBT_AMT, CURR_BILL_AMOUNT, pd_penalty, column_name;
+    private String COMPANY, SUBDIV_CODE, SUB_DIVISION, MOBILE_NO, HELPLINE_NO, COLLECTION_FLAG, COLL_MAX_AMOUNT, COLLECTION_DATE, LOGO_PRINT,
+            BARCODE_PRINT, SLABS_PRINT, BIOMETRIC_TEMPLATE, MRNAME, MRPASSWD, BILL_OPEN_TIME, BILL_CLOSE_TIME, BILLING_STATUS, MACHINE_ID,
+            DB_VERSION, SERVER_DOMAIN, BIOMETRIC_INTERVAL, BIOMETRIC_ENABLE, BILLING_MMYYYY, FTP_UPLOAD, FTP_DOWNLOAD, BIO_PRINT_CNT,
+            Billed_Record, UPLOAD_STATUS, PRINTER_TYPE, PRE_PRINT, INTR_ON_ARR, TAX_ON_EC, BT_PRINTER, APP_VER, PRINTER_FORMAT, FEC,
+            DL_FLAG, NWTRF_DATE, FAC_START, FAC_END, TAX_NEW_EFFECT;
     private int old_days=0, normal_days=0;
-    private double EC, fc_old_value=0, fc_normal_value=0, ec_old_value=0, ec_normal_value=0, fac_days=0, fac_remaining_days=0, fec;
+    private double fc_old_value=0, fc_normal_value=0, ec_old_value=0, ec_normal_value=0, fac_days=0, fac_remaining_days=0, fec;
     private String tax_days_new="", tax_days_old="";
     private Cursor current_data=null, old_data=null;
 
@@ -642,13 +647,13 @@ public class GetSet_MastCust {
         this.normal_days = normal_days;
     }
 
-    public double getEC() {
+    /*public double getEC() {
         return EC;
     }
 
     public void setEC(double EC) {
         this.EC = EC;
-    }
+    }*/
 
     public double getFc_old_value() {
         return fc_old_value;
@@ -794,13 +799,13 @@ public class GetSet_MastCust {
         this.GOK_SUBSIDY = GOK_SUBSIDY;
     }
 
-    public String getDEM_REVENUE() {
+    /*public String getDEM_REVENUE() {
         return DEM_REVENUE;
     }
 
     public void setDEM_REVENUE(String DEM_REVENUE) {
         this.DEM_REVENUE = DEM_REVENUE;
-    }
+    }*/
 
     public String getPAYABLE_REAL() {
         return PAYABLE_REAL;
@@ -984,5 +989,333 @@ public class GetSet_MastCust {
 
     public void setColumn_name(String column_name) {
         this.column_name = column_name;
+    }
+
+    public String getCOMPANY() {
+        return COMPANY;
+    }
+
+    public void setCOMPANY(String COMPANY) {
+        this.COMPANY = COMPANY;
+    }
+
+    public String getSUBDIV_CODE() {
+        return SUBDIV_CODE;
+    }
+
+    public void setSUBDIV_CODE(String SUBDIV_CODE) {
+        this.SUBDIV_CODE = SUBDIV_CODE;
+    }
+
+    public String getSUB_DIVISION() {
+        return SUB_DIVISION;
+    }
+
+    public void setSUB_DIVISION(String SUB_DIVISION) {
+        this.SUB_DIVISION = SUB_DIVISION;
+    }
+
+    public String getMOBILE_NO() {
+        return MOBILE_NO;
+    }
+
+    public void setMOBILE_NO(String MOBILE_NO) {
+        this.MOBILE_NO = MOBILE_NO;
+    }
+
+    public String getHELPLINE_NO() {
+        return HELPLINE_NO;
+    }
+
+    public void setHELPLINE_NO(String HELPLINE_NO) {
+        this.HELPLINE_NO = HELPLINE_NO;
+    }
+
+    public String getCOLLECTION_FLAG() {
+        return COLLECTION_FLAG;
+    }
+
+    public void setCOLLECTION_FLAG(String COLLECTION_FLAG) {
+        this.COLLECTION_FLAG = COLLECTION_FLAG;
+    }
+
+    public String getCOLL_MAX_AMOUNT() {
+        return COLL_MAX_AMOUNT;
+    }
+
+    public void setCOLL_MAX_AMOUNT(String COLL_MAX_AMOUNT) {
+        this.COLL_MAX_AMOUNT = COLL_MAX_AMOUNT;
+    }
+
+    public String getCOLLECTION_DATE() {
+        return COLLECTION_DATE;
+    }
+
+    public void setCOLLECTION_DATE(String COLLECTION_DATE) {
+        this.COLLECTION_DATE = COLLECTION_DATE;
+    }
+
+    public String getLOGO_PRINT() {
+        return LOGO_PRINT;
+    }
+
+    public void setLOGO_PRINT(String LOGO_PRINT) {
+        this.LOGO_PRINT = LOGO_PRINT;
+    }
+
+    public String getBARCODE_PRINT() {
+        return BARCODE_PRINT;
+    }
+
+    public void setBARCODE_PRINT(String BARCODE_PRINT) {
+        this.BARCODE_PRINT = BARCODE_PRINT;
+    }
+
+    public String getSLABS_PRINT() {
+        return SLABS_PRINT;
+    }
+
+    public void setSLABS_PRINT(String SLABS_PRINT) {
+        this.SLABS_PRINT = SLABS_PRINT;
+    }
+
+    public String getBIOMETRIC_TEMPLATE() {
+        return BIOMETRIC_TEMPLATE;
+    }
+
+    public void setBIOMETRIC_TEMPLATE(String BIOMETRIC_TEMPLATE) {
+        this.BIOMETRIC_TEMPLATE = BIOMETRIC_TEMPLATE;
+    }
+
+    public String getMRNAME() {
+        return MRNAME;
+    }
+
+    public void setMRNAME(String MRNAME) {
+        this.MRNAME = MRNAME;
+    }
+
+    public String getMRPASSWD() {
+        return MRPASSWD;
+    }
+
+    public void setMRPASSWD(String MRPASSWD) {
+        this.MRPASSWD = MRPASSWD;
+    }
+
+    public String getBILL_OPEN_TIME() {
+        return BILL_OPEN_TIME;
+    }
+
+    public void setBILL_OPEN_TIME(String BILL_OPEN_TIME) {
+        this.BILL_OPEN_TIME = BILL_OPEN_TIME;
+    }
+
+    public String getBILL_CLOSE_TIME() {
+        return BILL_CLOSE_TIME;
+    }
+
+    public void setBILL_CLOSE_TIME(String BILL_CLOSE_TIME) {
+        this.BILL_CLOSE_TIME = BILL_CLOSE_TIME;
+    }
+
+    public String getBILLING_STATUS() {
+        return BILLING_STATUS;
+    }
+
+    public void setBILLING_STATUS(String BILLING_STATUS) {
+        this.BILLING_STATUS = BILLING_STATUS;
+    }
+
+    public String getMACHINE_ID() {
+        return MACHINE_ID;
+    }
+
+    public void setMACHINE_ID(String MACHINE_ID) {
+        this.MACHINE_ID = MACHINE_ID;
+    }
+
+    public String getDB_VERSION() {
+        return DB_VERSION;
+    }
+
+    public void setDB_VERSION(String DB_VERSION) {
+        this.DB_VERSION = DB_VERSION;
+    }
+
+    public String getSERVER_DOMAIN() {
+        return SERVER_DOMAIN;
+    }
+
+    public void setSERVER_DOMAIN(String SERVER_DOMAIN) {
+        this.SERVER_DOMAIN = SERVER_DOMAIN;
+    }
+
+    public String getBIOMETRIC_INTERVAL() {
+        return BIOMETRIC_INTERVAL;
+    }
+
+    public void setBIOMETRIC_INTERVAL(String BIOMETRIC_INTERVAL) {
+        this.BIOMETRIC_INTERVAL = BIOMETRIC_INTERVAL;
+    }
+
+    public String getBIOMETRIC_ENABLE() {
+        return BIOMETRIC_ENABLE;
+    }
+
+    public void setBIOMETRIC_ENABLE(String BIOMETRIC_ENABLE) {
+        this.BIOMETRIC_ENABLE = BIOMETRIC_ENABLE;
+    }
+
+    public String getBILLING_MMYYYY() {
+        return BILLING_MMYYYY;
+    }
+
+    public void setBILLING_MMYYYY(String BILLING_MMYYYY) {
+        this.BILLING_MMYYYY = BILLING_MMYYYY;
+    }
+
+    public String getFTP_UPLOAD() {
+        return FTP_UPLOAD;
+    }
+
+    public void setFTP_UPLOAD(String FTP_UPLOAD) {
+        this.FTP_UPLOAD = FTP_UPLOAD;
+    }
+
+    public String getFTP_DOWNLOAD() {
+        return FTP_DOWNLOAD;
+    }
+
+    public void setFTP_DOWNLOAD(String FTP_DOWNLOAD) {
+        this.FTP_DOWNLOAD = FTP_DOWNLOAD;
+    }
+
+    public String getBIO_PRINT_CNT() {
+        return BIO_PRINT_CNT;
+    }
+
+    public void setBIO_PRINT_CNT(String BIO_PRINT_CNT) {
+        this.BIO_PRINT_CNT = BIO_PRINT_CNT;
+    }
+
+    public String getBilled_Record() {
+        return Billed_Record;
+    }
+
+    public void setBilled_Record(String billed_Record) {
+        Billed_Record = billed_Record;
+    }
+
+    public String getUPLOAD_STATUS() {
+        return UPLOAD_STATUS;
+    }
+
+    public void setUPLOAD_STATUS(String UPLOAD_STATUS) {
+        this.UPLOAD_STATUS = UPLOAD_STATUS;
+    }
+
+    public String getPRINTER_TYPE() {
+        return PRINTER_TYPE;
+    }
+
+    public void setPRINTER_TYPE(String PRINTER_TYPE) {
+        this.PRINTER_TYPE = PRINTER_TYPE;
+    }
+
+    public String getPRE_PRINT() {
+        return PRE_PRINT;
+    }
+
+    public void setPRE_PRINT(String PRE_PRINT) {
+        this.PRE_PRINT = PRE_PRINT;
+    }
+
+    public String getINTR_ON_ARR() {
+        return INTR_ON_ARR;
+    }
+
+    public void setINTR_ON_ARR(String INTR_ON_ARR) {
+        this.INTR_ON_ARR = INTR_ON_ARR;
+    }
+
+    public String getTAX_ON_EC() {
+        return TAX_ON_EC;
+    }
+
+    public void setTAX_ON_EC(String TAX_ON_EC) {
+        this.TAX_ON_EC = TAX_ON_EC;
+    }
+
+    public String getBT_PRINTER() {
+        return BT_PRINTER;
+    }
+
+    public void setBT_PRINTER(String BT_PRINTER) {
+        this.BT_PRINTER = BT_PRINTER;
+    }
+
+    public String getAPP_VER() {
+        return APP_VER;
+    }
+
+    public void setAPP_VER(String APP_VER) {
+        this.APP_VER = APP_VER;
+    }
+
+    public String getPRINTER_FORMAT() {
+        return PRINTER_FORMAT;
+    }
+
+    public void setPRINTER_FORMAT(String PRINTER_FORMAT) {
+        this.PRINTER_FORMAT = PRINTER_FORMAT;
+    }
+
+    public String getFEC() {
+        return FEC;
+    }
+
+    public void setFEC(String FEC) {
+        this.FEC = FEC;
+    }
+
+    public String getDL_FLAG() {
+        return DL_FLAG;
+    }
+
+    public void setDL_FLAG(String DL_FLAG) {
+        this.DL_FLAG = DL_FLAG;
+    }
+
+    public String getNWTRF_DATE() {
+        return NWTRF_DATE;
+    }
+
+    public void setNWTRF_DATE(String NWTRF_DATE) {
+        this.NWTRF_DATE = NWTRF_DATE;
+    }
+
+    public String getFAC_START() {
+        return FAC_START;
+    }
+
+    public void setFAC_START(String FAC_START) {
+        this.FAC_START = FAC_START;
+    }
+
+    public String getFAC_END() {
+        return FAC_END;
+    }
+
+    public void setFAC_END(String FAC_END) {
+        this.FAC_END = FAC_END;
+    }
+
+    public String getTAX_NEW_EFFECT() {
+        return TAX_NEW_EFFECT;
+    }
+
+    public void setTAX_NEW_EFFECT(String TAX_NEW_EFFECT) {
+        this.TAX_NEW_EFFECT = TAX_NEW_EFFECT;
     }
 }

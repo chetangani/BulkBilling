@@ -11,8 +11,16 @@ import com.transvision.bulkbilling.extra.FunctionsCall;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
+import static com.transvision.bulkbilling.MainActivity.read_count;
 import static com.transvision.bulkbilling.extra.Constants.COLUMNS_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OLD_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OUT_ERROR;
@@ -197,6 +205,50 @@ public class GetSet_Mast_Values {
         }
         getSetMastCust.setFDRCODE(functionsCall.getCursorValue(data, "FDRCODE"));
         getSetMastCust.setTCNAME(functionsCall.getCursorValue(data, "TCNAME"));
+    }
+
+    public void set_Subdiv_Details(Cursor data, GetSet_MastCust getSetMastCust) {
+        getSetMastCust.setCOMPANY(functionsCall.getCursorValue(data, "COMPANY"));
+        getSetMastCust.setSUBDIV_CODE(functionsCall.getCursorValue(data, "SUBDIV_CODE"));
+        getSetMastCust.setSUB_DIVISION(functionsCall.getCursorValue(data, "SUB_DIVISION"));
+        getSetMastCust.setMOBILE_NO(functionsCall.getCursorValue(data, "MOBILE_NO"));
+        getSetMastCust.setHELPLINE_NO(functionsCall.getCursorValue(data, "HELPLINE_NO"));
+        getSetMastCust.setCOLLECTION_FLAG(functionsCall.getCursorValue(data, "COLLECTION_FLAG"));
+        getSetMastCust.setCOLL_MAX_AMOUNT(functionsCall.getCursorValue(data, "COLL_MAX_AMOUNT"));
+        getSetMastCust.setCOLLECTION_DATE(functionsCall.getCursorValue(data, "COLLECTION_DATE"));
+        getSetMastCust.setLOGO_PRINT(functionsCall.getCursorValue(data, "LOGO_PRINT"));
+        getSetMastCust.setBARCODE_PRINT(functionsCall.getCursorValue(data, "BARCODE_PRINT"));
+        getSetMastCust.setSLABS_PRINT(functionsCall.getCursorValue(data, "SLABS_PRINT"));
+        getSetMastCust.setBIOMETRIC_TEMPLATE(functionsCall.getCursorValue(data, "BIOMETRIC_TEMPLATE"));
+        getSetMastCust.setMRNAME(functionsCall.getCursorValue(data, "MRNAME"));
+        getSetMastCust.setMRPASSWD(functionsCall.getCursorValue(data, "MRPASSWD"));
+        getSetMastCust.setBILL_OPEN_TIME(functionsCall.getCursorValue(data, "BILL_OPEN_TIME"));
+        getSetMastCust.setBILL_CLOSE_TIME(functionsCall.getCursorValue(data, "BILL_CLOSE_TIME"));
+        getSetMastCust.setBILLING_STATUS(functionsCall.getCursorValue(data, "BILLING_STATUS"));
+        getSetMastCust.setMACHINE_ID(functionsCall.getCursorValue(data, "MACHINE_ID"));
+        getSetMastCust.setDB_VERSION(functionsCall.getCursorValue(data, "DB_VERSION"));
+        getSetMastCust.setSERVER_DOMAIN(functionsCall.getCursorValue(data, "SERVER_DOMAIN"));
+        getSetMastCust.setBIOMETRIC_INTERVAL(functionsCall.getCursorValue(data, "BIOMETRIC_INTERVAL"));
+        getSetMastCust.setBIOMETRIC_ENABLE(functionsCall.getCursorValue(data, "BIOMETRIC_ENABLE"));
+        getSetMastCust.setBILLING_MMYYYY(functionsCall.getCursorValue(data, "BILLING_MMYYYY"));
+        getSetMastCust.setFTP_UPLOAD(functionsCall.getCursorValue(data, "FTP_UPLOAD"));
+        getSetMastCust.setFTP_DOWNLOAD(functionsCall.getCursorValue(data, "FTP_DOWNLOAD"));
+        getSetMastCust.setBIO_PRINT_CNT(functionsCall.getCursorValue(data, "BIO_PRINT_CNT"));
+        getSetMastCust.setBilled_Record(functionsCall.getCursorValue(data, "Billed_Record"));
+        getSetMastCust.setUPLOAD_STATUS(functionsCall.getCursorValue(data, "UPLOAD_STATUS"));
+        getSetMastCust.setPRINTER_TYPE(functionsCall.getCursorValue(data, "PRINTER_TYPE"));
+        getSetMastCust.setPRE_PRINT(functionsCall.getCursorValue(data, "PRE_PRINT"));
+        getSetMastCust.setINTR_ON_ARR(functionsCall.getCursorValue(data, "INTR_ON_ARR"));
+        getSetMastCust.setTAX_ON_EC(functionsCall.getCursorValue(data, "TAX_ON_EC"));
+        getSetMastCust.setBT_PRINTER(functionsCall.getCursorValue(data, "BT_PRINTER"));
+        getSetMastCust.setAPP_VER(functionsCall.getCursorValue(data, "APP_VER"));
+        getSetMastCust.setPRINTER_FORMAT(functionsCall.getCursorValue(data, "PRINTER_FORMAT"));
+        getSetMastCust.setFEC(functionsCall.getCursorValue(data, "FEC"));
+        getSetMastCust.setDL_FLAG(functionsCall.getCursorValue(data, "DL_FLAG"));
+        getSetMastCust.setNWTRF_DATE(functionsCall.getCursorValue(data, "NWTRF_DATE"));
+        getSetMastCust.setFAC_START(functionsCall.getCursorValue(data, "FAC_START"));
+        getSetMastCust.setFAC_END(functionsCall.getCursorValue(data, "FAC_END"));
+        getSetMastCust.setTAX_NEW_EFFECT(functionsCall.getCursorValue(data, "TAX_NEW_EFFECT"));
     }
 
     private boolean check_column(Cursor data, String column) {
@@ -693,6 +745,9 @@ public class GetSet_Mast_Values {
         slabs_cv.put("FAC", getSetMastCust.getFac_days());
         slabs_cv.put("FAC_NULL", getSetMastCust.getFac_remaining_days());
         slabs_cv.put("DL_FC", ""+getSetMastCust.getArrdlFslab_old()[1] + "," + ""+getSetMastCust.getArrdlFslab_old()[2]);
+
+        print_text_file(databasehelper, getSetMastCust);
+
         //noinspection ConstantConditions
         if (functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 1 || functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 2 ||
                 functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 7 || functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 15) {
@@ -703,5 +758,280 @@ public class GetSet_Mast_Values {
                 else handler.sendEmptyMessage(INSERT_MAST_OLD_OUT_ERROR);
             } else handler.sendEmptyMessage(INSERT_SUCCESS);
         } else handler.sendEmptyMessage(INSERT_SUCCESS);
+    }
+
+    public boolean insert_subdiv_details(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
+        ContentValues cv = new ContentValues();
+        cv.put("COMPANY", getSetMastCust.getCOMPANY());
+        cv.put("SUBDIV_CODE", getSetMastCust.getSUBDIV_CODE());
+        cv.put("SUB_DIVISION", getSetMastCust.getSUB_DIVISION());
+        cv.put("MOBILE_NO", getSetMastCust.getMOBILE_NO());
+        cv.put("HELPLINE_NO", getSetMastCust.getHELPLINE_NO());
+        cv.put("COLLECTION_FLAG", getSetMastCust.getCOLLECTION_FLAG());
+        cv.put("COLL_MAX_AMOUNT", getSetMastCust.getCOLL_MAX_AMOUNT());
+        cv.put("COLLECTION_DATE", getSetMastCust.getCOLLECTION_DATE());
+        cv.put("LOGO_PRINT", getSetMastCust.getLOGO_PRINT());
+        cv.put("BARCODE_PRINT", getSetMastCust.getBARCODE_PRINT());
+        cv.put("SLABS_PRINT", getSetMastCust.getSLABS_PRINT());
+        cv.put("BIOMETRIC_TEMPLATE", getSetMastCust.getBIOMETRIC_TEMPLATE());
+        cv.put("MRNAME", getSetMastCust.getMRNAME());
+        cv.put("MRPASSWD", getSetMastCust.getMRPASSWD());
+        cv.put("BILL_OPEN_TIME", getSetMastCust.getBILL_OPEN_TIME());
+        cv.put("BILL_CLOSE_TIME", getSetMastCust.getBILL_CLOSE_TIME());
+        cv.put("BILLING_STATUS", getSetMastCust.getBILLING_STATUS());
+        cv.put("MACHINE_ID", getSetMastCust.getMACHINE_ID());
+        cv.put("DB_VERSION", getSetMastCust.getDB_VERSION());
+        cv.put("SERVER_DOMAIN", getSetMastCust.getSERVER_DOMAIN());
+        cv.put("BIOMETRIC_INTERVAL", getSetMastCust.getBIOMETRIC_INTERVAL());
+        cv.put("BIOMETRIC_ENABLE", getSetMastCust.getBIOMETRIC_ENABLE());
+        cv.put("BILLING_MMYYYY", getSetMastCust.getBILLING_MMYYYY());
+        cv.put("FTP_UPLOAD", getSetMastCust.getFTP_UPLOAD());
+        cv.put("FTP_DOWNLOAD", getSetMastCust.getFTP_DOWNLOAD());
+        cv.put("BIO_PRINT_CNT", getSetMastCust.getBIO_PRINT_CNT());
+        cv.put("Billed_Record", getSetMastCust.getBilled_Record());
+        cv.put("UPLOAD_STATUS", getSetMastCust.getUPLOAD_STATUS());
+        cv.put("PRINTER_TYPE", getSetMastCust.getPRINTER_TYPE());
+        cv.put("PRE_PRINT", getSetMastCust.getPRE_PRINT());
+        cv.put("INTR_ON_ARR", getSetMastCust.getINTR_ON_ARR());
+        cv.put("TAX_ON_EC", getSetMastCust.getTAX_ON_EC());
+        cv.put("BT_PRINTER", getSetMastCust.getBT_PRINTER());
+        cv.put("APP_VER", getSetMastCust.getAPP_VER());
+        cv.put("PRINTER_FORMAT", getSetMastCust.getPRINTER_FORMAT());
+        cv.put("FEC", getSetMastCust.getFEC());
+        cv.put("DL_FLAG", getSetMastCust.getDL_FLAG());
+        cv.put("NWTRF_DATE", getSetMastCust.getNWTRF_DATE());
+        cv.put("FAC_START", getSetMastCust.getFAC_START());
+        cv.put("FAC_END", getSetMastCust.getFAC_END());
+        cv.put("TAX_NEW_EFFECT", getSetMastCust.getTAX_NEW_EFFECT());
+        return databasehelper.insert_Subdiv_details(cv);
+    }
+
+    private void print_text_file(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
+        DecimalFormat num = new DecimalFormat("##0.00");
+        double rep_dlcount = Double.parseDouble(getSetMastCust.getDLCOUNT());
+        ArrayList<String> addresslist = new ArrayList<>();
+        functionsCall.splitString(getSetMastCust.getADD1(), 43, addresslist);
+        String gkpays = getSetMastCust.getGOK_SUBSIDY();
+        String rep_payable = getSetMastCust.getPAYABLE();
+        String rep_cur_bill, rep_dl_days_count;
+        String status = databasehelper.get_status(getSetMastCust.getPRES_STS());
+
+        Cursor data = databasehelper.subdivdetails();
+        data.moveToNext();
+        set_Subdiv_Details(data, getSetMastCust);
+        data.close();
+
+        double days_diff = functionsCall.convert_decimal(getSetMastCust.getBILL_DAYS());
+        if (days_diff < 28) {
+            rep_dl_days_count = num.format((days_diff + 1) / 30);
+        } else rep_dl_days_count = num.format(days_diff / 30);
+
+        Double bill = Double.parseDouble(getSetMastCust.getCURR_BILL_AMOUNT())+Double.parseDouble(getSetMastCust.getTAX_AMOUNT())+Double.parseDouble(getSetMastCust.getDATA1())
+                +Double.parseDouble(getSetMastCust.getINTEREST_AMT())+Double.parseDouble(getSetMastCust.getDATA2());
+        if (getSetMastCust.getTARIFF().equals("10") || getSetMastCust.getTARIFF().equals("40")) {
+            rep_cur_bill = num.format(bill);
+        } else rep_cur_bill = num.format(bill);
+        if (getSetMastCust.getREBATE_FLAG().equals("1")) {
+            rep_cur_bill = num.format(Double.parseDouble(rep_cur_bill) - functionsCall.convert_decimal(getSetMastCust.getREBATE_AMOUNT()));
+        }
+        if (getSetMastCust.getREBATE_FLAG().equals("5")) {
+            rep_cur_bill = num.format(Double.parseDouble(rep_cur_bill) + Double.parseDouble(gkpays));
+        }
+        if (getSetMastCust.getTARIFF().equals("23")) {
+            rep_cur_bill = num.format(Double.parseDouble(rep_cur_bill) + Double.parseDouble(gkpays));
+        }
+        if (getSetMastCust.getTARIFF().equals("31")) {
+            gkpays = rep_cur_bill;
+            rep_payable = num.format(Double.parseDouble(rep_cur_bill) - Double.parseDouble(gkpays) +
+                    Double.parseDouble(getSetMastCust.getARREARS()) - Double.parseDouble(getSetMastCust.getDEPOSIT()) +
+                    Double.parseDouble(getSetMastCust.getCREADJ()));
+        }
+
+        String path = functionsCall.filepath("Text_file");
+        String filename = getSetMastCust.getMRCODE()+"_"+functionsCall.changedateformat(getSetMastCust.getREADDATE(), "")+".txt";
+
+        File log = new File(path + File.separator + filename);
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            log.createNewFile();
+            PrintWriter out = new PrintWriter(new FileWriter(log, true));
+            int pre_normal_text_length = 21;
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("\n");
+            stringBuilder.append(functionsCall.aligncenter("HUBLI ELECTRICITY SUPPLY COMPANY LTD", 42)).append("\n");
+            stringBuilder.append(functionsCall.aligncenter(getSetMastCust.getSUB_DIVISION(), 42)).append("\n");
+            stringBuilder.append(functionsCall.space("  Sub Division", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getSUBDIV_CODE()).append("\n");
+            stringBuilder.append(functionsCall.space("  RRNO", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getRRNO()).append("\n");
+            stringBuilder.append(functionsCall.space("  Account ID", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getCONSNO()).append("\n");
+            stringBuilder.append(functionsCall.aligncenter("Name and Address", 42)).append("\n");
+            stringBuilder.append("  ").append(getSetMastCust.getNAME()).append("\n");
+            if (addresslist.size() > 0) {
+                stringBuilder.append("  ").append(addresslist.get(0)).append("\n");
+            } else stringBuilder.append("\n");
+            if (addresslist.size() > 1) {
+                stringBuilder.append("  ").append(addresslist.get(1)).append("\n");
+            } else stringBuilder.append("\n");
+            stringBuilder.append(functionsCall.space("  Tariff", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getTARIFF_NAME()).append("\n");
+            stringBuilder.append(functionsCall.space("  Sanct Load", pre_normal_text_length)).append(":").append(" HP:").append(functionsCall.alignright(getSetMastCust.getSANCHP(), 5)).append(" ").append("KW:").append(functionsCall.alignright(getSetMastCust.getSANCKW(), 5)).append("\n");
+            stringBuilder.append(functionsCall.space("  Billing Period", pre_normal_text_length)).append(":").append(" ").append(functionsCall.changedateformat(getSetMastCust.getPREV_READ_DATE(), "/")).append("-").append(functionsCall.changedateformat(getSetMastCust.getREADDATE(), "/")).append("\n");
+            stringBuilder.append(functionsCall.space("  Reading Date", pre_normal_text_length)).append(":").append(" ").append(functionsCall.changedateformat(getSetMastCust.getREADDATE(), "/")).append("\n");
+            stringBuilder.append(functionsCall.space("  BillNo", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getCONSNO()).append(functionsCall.getMonth(getSetMastCust.getREADDATE())).append("01").append("\n");
+            stringBuilder.append(functionsCall.space("  Meter SlNo.", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getMTR_SERIAL_NO()).append("\n");
+            stringBuilder.append(functionsCall.space("  Pres Rdg", pre_normal_text_length)).append(":").append(" ").append(functionsCall.space(getSetMastCust.getPRES_RDG(), 9)).append("  ").append(status).append("\n");
+            stringBuilder.append(functionsCall.space("  Prev Rdg", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getPRVRED()).append("\n");
+            stringBuilder.append(functionsCall.space("  Constant", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getMF()).append("\n");
+            stringBuilder.append(functionsCall.space("  Consumption", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getUnits()).append("\n");
+            stringBuilder.append(functionsCall.space("  Average", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getAVGCON()).append("\n");
+            if (getSetMastCust.getPF_FLAG().equals("2") || getSetMastCust.getPF_FLAG().equals("1")) {
+                stringBuilder.append(functionsCall.space("  Recorded MD", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getBMDVAL()).append("\n");
+                stringBuilder.append(functionsCall.space("  Power Factor", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getPFVAL()).append("\n");
+            } else if (getSetMastCust.getPF_FLAG().equals("0")) {
+                if (Double.parseDouble(getSetMastCust.getBMDVAL()) > 0) {
+                    stringBuilder.append(functionsCall.space("  Recorded MD", pre_normal_text_length)).append(":").append(" ").append(getSetMastCust.getBMDVAL()).append("\n");
+                } else stringBuilder.append(" ").append("\n");
+                stringBuilder.append(" ").append("\n");
+            }
+
+            stringBuilder.append("   ").append(functionsCall.line(39)).append("\n");
+
+            int pres_sts = Integer.parseInt(getSetMastCust.getPRES_STS());
+            if (pres_sts == 1 || pres_sts == 2 || pres_sts == 7 || pres_sts == 15) {
+                stringBuilder.append(functionsCall.aligncenter("Fixed Charges ", 42)).append("\n");
+            } else {
+                if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                    stringBuilder.append(functionsCall.aligncenter("Fixed Charges Present ( "+ ""+getSetMastCust.getNormal_days()+" )", 42)).append("\n");
+                else stringBuilder.append(functionsCall.aligncenter("Fixed Charges ", 42)).append("\n");
+            }
+
+            if (!(""+num.format(getSetMastCust.getArrFc()[1])).equals("0.00")) {
+                if (rep_dlcount != 0) {
+                    if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                        stringBuilder.append("  ").append(functionsCall.alignright(functionsCall.decimal_format(""+(getSetMastCust.getFc_normal_value() + 1)), 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrdlFslab()[1]), 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate()[1]), 8)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc()[1]), 16)).append("\n");
+                    else stringBuilder.append("  ").append(functionsCall.alignright(rep_dl_days_count, 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrdlFslab()[1]), 6)).append(" ").append("x").append(functionsCall.alignright(""+getSetMastCust.getArrFrate()[1], 8)).append(functionsCall.alignright(""+getSetMastCust.getArrFc()[1], 16)).append("\n");
+                } else {
+                    if (getSetMastCust.getTARIFF().equals("70")){
+                        stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFslab()[1]), 6)).append(" ").append("x ").append(functionsCall.alignright(""+getSetMastCust.getNormal_days(), 3)).append(" ").append("x").append(functionsCall.alignright("(" + functionsCall.decimal_format(""+getSetMastCust.getArrFrate()[1]) + "/7)", 11)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc()[1]), 17)).append("\n");
+                    } else stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFslab()[1]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate()[1]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc()[1]), 20)).append("\n");
+                }
+            } else stringBuilder.append(" ").append("\n");
+            if (!(""+num.format(getSetMastCust.getArrFc()[2])).equals("0.00")) {
+                if (rep_dlcount != 0) {
+                    //Rounding off to 3 digits
+                    BigDecimal bd1 = new BigDecimal(""+getSetMastCust.getArrdlFslab()[2]).setScale(2, RoundingMode.HALF_EVEN);
+                    String rep_dl_fslab2 = functionsCall.decimal_format(bd1.doubleValue()+"");
+                    if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                        stringBuilder.append("  ").append(functionsCall.alignright(""+(getSetMastCust.getFc_normal_value() + 1), 6)).append(" ").append("x").append(functionsCall.alignright(rep_dl_fslab2, 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate()[2]), 8)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc()[2]), 16)).append("\n");
+                    else stringBuilder.append("  ").append(functionsCall.alignright(rep_dl_days_count, 6)).append(" ").append("x").append(functionsCall.alignright(rep_dl_fslab2, 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate()[2]), 8)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc()[2]), 16)).append("\n");
+                } else stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFslab()[2]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate()[2]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc()[2]), 20)).append("\n");
+            } else stringBuilder.append(" ").append("\n");
+
+            if (pres_sts == 1 || pres_sts == 2 || pres_sts == 7 || pres_sts == 15) {
+                stringBuilder.append(functionsCall.aligncenter("Energy Charges", 42)).append("\n");
+            } else {
+                if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                    stringBuilder.append(functionsCall.aligncenter("Energy Charges Present ( "+""+getSetMastCust.getNormal_days()+" ) ", 42)).append("\n");
+                else stringBuilder.append(functionsCall.aligncenter("Energy Charges", 42)).append("\n");
+            }
+
+            if (!(""+num.format(getSetMastCust.getArrEc()[1])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab()[1]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate()[1]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc()[1]), 20)).append("\n");
+            } else stringBuilder.append(" ").append("\n");
+            if (!(""+num.format(getSetMastCust.getArrEc()[2])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab()[2]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate()[2]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc()[2]), 20)).append("\n");
+            } else stringBuilder.append(" ").append("\n");
+            if (!(""+num.format(getSetMastCust.getArrEc()[3])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab()[3]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate()[3]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc()[3]), 20)).append("\n");
+            } else stringBuilder.append(" ").append("\n");
+            if (!(""+num.format(getSetMastCust.getArrEc()[4])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab()[4]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate()[4]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc()[4]), 20)).append("\n");
+            } else stringBuilder.append(" ").append("\n");
+
+            // ****************FIXED CHARGES OLD ************************/
+            if (!(""+num.format(getSetMastCust.getArrFc_old()[1])).equals("0.00") || !(""+num.format(getSetMastCust.getArrFc_old()[2])).equals("0.00")) {
+                stringBuilder.append("   ").append(functionsCall.line(33)).append("\n");
+                stringBuilder.append(functionsCall.aligncenter("Fixed Charges Previous ( "+getSetMastCust.getOld_days()+" ) ", 42)).append("\n");
+            }
+
+            if (!(""+num.format(getSetMastCust.getArrFc_old()[1])).equals("0.00")) {
+                if (rep_dlcount != 0) {
+                    stringBuilder.append("  ").append(functionsCall.alignright(functionsCall.decimal_format(""+(getSetMastCust.getFc_old_value() + 1)), 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrdlFslab_old()[1]), 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate_old()[1]), 8)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc_old()[1]), 16)).append("\n");
+                } else {
+                    if (getSetMastCust.getTARIFF().equals("70"))
+                        stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFslab_old()[1]), 6)).append(" ").append("x ").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getBILL_DAYS()), 3)).append(" ").append("x").append(functionsCall.alignright("(" + ""+getSetMastCust.getArrFrate_old()[1] + "/7)", 11)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc_old()[1]), 17)).append("\n");
+                    else stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFslab_old()[1]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate_old()[1]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc_old()[1]), 20)).append("\n");
+                }
+            }
+            if (!(""+num.format(getSetMastCust.getArrFc_old()[2])).equals("0.00")) {
+                if (rep_dlcount != 0) {
+                    stringBuilder.append("  ").append(functionsCall.alignright(functionsCall.decimal_format(""+(getSetMastCust.getFc_old_value() + 1)), 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrdlFslab_old()[2]), 6)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate_old()[2]), 8)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc_old()[2]), 16)).append("\n");
+                } else stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFslab_old()[2]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFrate_old()[2]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrFc_old()[2]), 20)).append("\n");
+            }
+            // *****************END OF FIXED CHARGES OLD ********************** */
+
+            // ******************ENERGY CHARGES OLD ********************************* */
+            if (!(""+num.format(getSetMastCust.getArrEc_old()[1])).equals("0.00") ||
+                    !(""+num.format(getSetMastCust.getArrEc_old()[2])).equals("0.00") ||
+                    !(""+num.format(getSetMastCust.getArrEc_old()[3])).equals("0.00") ||
+                    !(""+num.format(getSetMastCust.getArrEc_old()[4])).equals("0.00"))
+                stringBuilder.append(functionsCall.aligncenter("Energy Charges Previous ( "+getSetMastCust.getOld_days()+" )", 42)).append("\n");
+            if (!(""+num.format(getSetMastCust.getArrEc_old()[1])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab_old()[1]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate_old()[1]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc_old()[1]), 20)).append("\n");
+            }
+            if (!(""+num.format(getSetMastCust.getArrEc_old()[2])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab_old()[2]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate_old()[2]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc_old()[2]), 20)).append("\n");
+            }
+            if (!(""+num.format(getSetMastCust.getArrEc_old()[3])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab_old()[3]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate_old()[3]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc_old()[3]), 20)).append("\n");
+            }
+            if (!(""+num.format(getSetMastCust.getArrEc_old()[4])).equals("0.00")) {
+                stringBuilder.append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEslab_old()[4]), 10)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrErate_old()[4]), 10)).append(functionsCall.alignright(functionsCall.decimal_format(""+getSetMastCust.getArrEc_old()[4]), 20)).append("\n");
+            }
+            // *******************END OF ENERGY CHARGES NEW *****************************/
+
+            stringBuilder.append("   ").append(functionsCall.line(39)).append("\n");
+
+            if (getSetMastCust.getFac_days() != 0 || getSetMastCust.getFac_days() != 0.0 || getSetMastCust.getFac_days() != 0.00) {
+                stringBuilder.append(functionsCall.space("   FAC", 6)).append(":").append(" ").append(functionsCall.alignright(String.valueOf(getSetMastCust.getFac_days()), 8)).append(" ").append("x").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getFEC()), 8)).append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getDATA2()), 16)).append("\n");
+            }
+            if (getSetMastCust.getFac_remaining_days() != 0 || getSetMastCust.getFac_remaining_days() != 0.0 || getSetMastCust.getFac_remaining_days() != 0.00) {
+                stringBuilder.append(functionsCall.space("   FAC", 6)).append(":").append(" ").append(functionsCall.alignright(String.valueOf(getSetMastCust.getFac_remaining_days()), 8)).append(" ").append("x").append(functionsCall.alignright("0.00", 8)).append(functionsCall.alignright("0.00", 16)).append("\n");
+            }
+            if (getSetMastCust.getTARIFF().equals("70")) {
+                if (getSetMastCust.getREBATE_FLAG().equals("13")) {
+                    if (getSetMastCust.getPF_FLAG().equals("1"))
+                        stringBuilder.append(functionsCall.space("   Prepaid Rent", pre_normal_text_length)).append(":").append(" ").append(functionsCall.alignright("375.00", 19)).append("\n");
+                    if (getSetMastCust.getPF_FLAG().equals("2"))
+                        stringBuilder.append(functionsCall.space("   Prepaid Rent", pre_normal_text_length)).append(":").append(" ").append(functionsCall.alignright("500.00", 19)).append("\n");
+                }
+            }
+            stringBuilder.append(functionsCall.space("   Rebates/TOD", 18)).append("(-)").append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getREBATE_AMOUNT()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   PF Penalty", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getPF_PENALTY()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   MD Penalty", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getBMD_PENALTY()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Interest", 18)).append("@1%").append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getINTEREST_AMT()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Others", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getDATA1()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Tax", 18)).append("@9%").append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getTAX_AMOUNT()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Cur Bill Amt", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(rep_cur_bill), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Arrears", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getARREARS()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   DL Bill", 18)).append("(-)").append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getDEPOSIT()), 19)).append("\n");
+//            stringBuilder.append(functionsCall.space("   Credits & Adj", 18)).append("(-)").append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getDEPOSIT()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Credits & Adj", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getCREADJ()), 19)).append("\n");
+//            stringBuilder.append(functionsCall.space("   IOD", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(getSetMastCust.getCREADJ()), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   GOK Subsidy", 18)).append("(-)").append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(gkpays), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Net Amt Due", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.decimal_format(rep_payable), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Due Date", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.duedate(functionsCall.changedateformat(getSetMastCust.getREADDATE(), "/"), 14), 19)).append("\n");
+            stringBuilder.append(functionsCall.space("   Billed On", 21)).append(":").append(" ").append(functionsCall.alignright(functionsCall.currentDateandTime(), 19)).append("\n");
+            if (!getSetMastCust.getEXTRA1().equals("0"))
+                stringBuilder.append("   ").append(getSetMastCust.getEXTRA1()).append("\n");
+            stringBuilder.append(functionsCall.space("   MRCode", 8)).append(":").append(getSetMastCust.getMRCODE()).append(" ").append(getSetMastCust.getMRNAME()).append("\n");
+            stringBuilder.append(functionsCall.space(" ", 10)).append(getSetMastCust.getMACHINE_ID()).append(getSetMastCust.getMRCODE()).append("\n");
+            stringBuilder.append("\n");
+            stringBuilder.append(functionsCall.line(35)).append(" ").append(read_count).append(" ").append(functionsCall.line(35));
+            out.append(stringBuilder.toString());
+            out.append("\r\n");
+            out.close();
+            stringBuilder.setLength(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
