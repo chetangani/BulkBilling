@@ -9,13 +9,15 @@ public class GetSet_MastCust {
             INT_ON_DEP, SO_FEEDER_TC_POLE, TARIFF_NAME, PREV_READ_DATE, BILL_DAYS, MTR_SERIAL_NO, CHQ_DISSHONOUR_FLAG, CHQ_DISHONOUR_DATE,
             FDRNAME, TCCODE, MTR_FLAG, INVENTORY_LOAD, HP, BMDKW, CONNLDHP, CONNLDKW, CREADJ, READKVAH, GPS_LAT, TOD_CHARGES,
             GPS_LONG, AADHAAR, MAIL, ELECTION, RATION, WATER, HOUSE_NO, FDRCODE, TCNAME, PRES_RDG, PRES_STS, TOD_CURRENT1, TOD_CURRENT3,
-            units, FIX, ENGCHG, REBATE_AMOUNT, TAX_AMOUNT, BMD_PENALTY, PF_PENALTY, PAYABLE, GOK_SUBSIDY,
+            units, FIX, ENGCHG, REBATE_AMOUNT, TAX_AMOUNT, BMD_PENALTY, PF_PENALTY, PAYABLE, GOK_SUBSIDY, BILL_NO,
             PAYABLE_REAL, PAYABLE_PROFIT, PAYABLE_LOSS, CHARITABLE_RBT_AMT, CURR_BILL_AMOUNT, pd_penalty, column_name;
     private String COMPANY, SUBDIV_CODE, SUB_DIVISION, MOBILE_NO, HELPLINE_NO, COLLECTION_FLAG, COLL_MAX_AMOUNT, COLLECTION_DATE, LOGO_PRINT,
             BARCODE_PRINT, SLABS_PRINT, BIOMETRIC_TEMPLATE, MRNAME, MRPASSWD, BILL_OPEN_TIME, BILL_CLOSE_TIME, BILLING_STATUS, MACHINE_ID,
             DB_VERSION, SERVER_DOMAIN, BIOMETRIC_INTERVAL, BIOMETRIC_ENABLE, BILLING_MMYYYY, FTP_UPLOAD, FTP_DOWNLOAD, BIO_PRINT_CNT,
             Billed_Record, UPLOAD_STATUS, PRINTER_TYPE, PRE_PRINT, INTR_ON_ARR, TAX_ON_EC, BT_PRINTER, APP_VER, PRINTER_FORMAT, FEC,
             DL_FLAG, NWTRF_DATE, FAC_START, FAC_END, TAX_NEW_EFFECT;
+    private String INSERT_SSNO, INSERT_EXTRA1, INSERT_DATA1, INSERT_EXTRA2, INSERT_DATA2, INSERT_BMDVAL, INSERT_INTEREST_AMT,
+            INSERT_REBATE_AMOUNT, INSERT_BMD_PENALTY;
     private int old_days=0, normal_days=0;
     private double fc_old_value=0, fc_normal_value=0, ec_old_value=0, ec_normal_value=0, fac_days=0, fac_remaining_days=0, fec;
     private String tax_days_new="", tax_days_old="";
@@ -1317,5 +1319,85 @@ public class GetSet_MastCust {
 
     public void setTAX_NEW_EFFECT(String TAX_NEW_EFFECT) {
         this.TAX_NEW_EFFECT = TAX_NEW_EFFECT;
+    }
+
+    public String getINSERT_SSNO() {
+        return INSERT_SSNO;
+    }
+
+    public void setINSERT_SSNO(String INSERT_SSNO) {
+        this.INSERT_SSNO = INSERT_SSNO;
+    }
+
+    public String getINSERT_EXTRA1() {
+        return INSERT_EXTRA1;
+    }
+
+    public void setINSERT_EXTRA1(String INSERT_EXTRA1) {
+        this.INSERT_EXTRA1 = INSERT_EXTRA1;
+    }
+
+    public String getINSERT_DATA1() {
+        return INSERT_DATA1;
+    }
+
+    public void setINSERT_DATA1(String INSERT_DATA1) {
+        this.INSERT_DATA1 = INSERT_DATA1;
+    }
+
+    public String getINSERT_EXTRA2() {
+        return INSERT_EXTRA2;
+    }
+
+    public void setINSERT_EXTRA2(String INSERT_EXTRA2) {
+        this.INSERT_EXTRA2 = INSERT_EXTRA2;
+    }
+
+    public String getINSERT_DATA2() {
+        return INSERT_DATA2;
+    }
+
+    public void setINSERT_DATA2(String INSERT_DATA2) {
+        this.INSERT_DATA2 = INSERT_DATA2;
+    }
+
+    public String getINSERT_BMDVAL() {
+        return INSERT_BMDVAL;
+    }
+
+    public void setINSERT_BMDVAL(String INSERT_BMDVAL) {
+        this.INSERT_BMDVAL = INSERT_BMDVAL;
+    }
+
+    public String getINSERT_INTEREST_AMT() {
+        return INSERT_INTEREST_AMT;
+    }
+
+    public void setINSERT_INTEREST_AMT(String INSERT_INTEREST_AMT) {
+        this.INSERT_INTEREST_AMT = INSERT_INTEREST_AMT;
+    }
+
+    public String getINSERT_REBATE_AMOUNT() {
+        return INSERT_REBATE_AMOUNT;
+    }
+
+    public void setINSERT_REBATE_AMOUNT(String INSERT_REBATE_AMOUNT) {
+        this.INSERT_REBATE_AMOUNT = INSERT_REBATE_AMOUNT;
+    }
+
+    public String getINSERT_BMD_PENALTY() {
+        return INSERT_BMD_PENALTY;
+    }
+
+    public void setINSERT_BMD_PENALTY(String INSERT_BMD_PENALTY) {
+        this.INSERT_BMD_PENALTY = INSERT_BMD_PENALTY;
+    }
+
+    public String getBILL_NO() {
+        return BILL_NO;
+    }
+
+    public void setBILL_NO(String BILL_NO) {
+        this.BILL_NO = BILL_NO;
     }
 }

@@ -46,8 +46,10 @@ import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.ASSETS_DB_COPY_SUCCESS;
+import static com.transvision.bulkbilling.extra.Constants.CHECK_DOWNLOAD_BILLING_FILE;
 import static com.transvision.bulkbilling.extra.Constants.COLUMNS_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.DB_FILE_DELETE_SUCCESS;
+import static com.transvision.bulkbilling.extra.Constants.DOWNLOAD_BILLING_FILE_FOUND;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OLD_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_MAST_OUT_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.INSERT_SUCCESS;
@@ -59,6 +61,7 @@ import static com.transvision.bulkbilling.extra.Constants.MAST_OUT_FILE_EXTRACTE
 import static com.transvision.bulkbilling.extra.Constants.MAST_OUT_FILE_UPDATED;
 import static com.transvision.bulkbilling.extra.Constants.READ_MAST_CUST_ERROR;
 import static com.transvision.bulkbilling.extra.Constants.UPLOAD_BILLED_FILE_FOUND;
+import static com.transvision.bulkbilling.extra.Constants.UPLOAD_BILLED_FILE_NOT_FOUND;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int RequestPermissionCode = 1;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int DLG_NO_RECORDS = 9;
     private static final int DLG_MR_SELECTION_FILE = 10;
     private static final int DLG_PROGRESS_UPDATE = 11;
+    private static final int DLG_FILE_NOT_FOUND = 12;
+    private static final int DLG_DOWNLOAD_FILE_FOUND = 13;
 
     Button start_btn, bill_reports_btn, generate_db_btn;
     TextView tv_count, tv_to_bill, tv_completed, tv_records, tv_dlg_update;
@@ -156,6 +161,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tv_dlg_update.setText(getResources().getString(R.string.dlg_progress_msg_2));
                     new Thread(new FTPAPI().new Download_file(getSetValues.getDownload_file_name(), getSetValues.getSelected_mr(),
                             getSetValues.getSelected_date(), handler, true, getSetValues)).start();
+                    break;
+
+                case CHECK_DOWNLOAD_BILLING_FILE:
+                    new Thread(new FTPAPI().new Check_available_file(getSetValues.getSelected_mr(),
+                            functionsCall.changedateformat(getSetValues.getSelected_date(), ""), handler,
+                            getSetValues, true)).start();
+                    break;
+
+                case DOWNLOAD_BILLING_FILE_FOUND:
+                    progress_dialog.dismiss();
+                    showdialog(DLG_DOWNLOAD_FILE_FOUND);
+                    break;
+
+                case UPLOAD_BILLED_FILE_NOT_FOUND:
+                    progress_dialog.dismiss();
+                    showdialog(DLG_FILE_NOT_FOUND);
                     break;
 
                 case MAST_CUST_FILE_DOWNLOADED:
@@ -548,8 +569,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         getSetValues.setSelected_date(functionsCall.changedateformat(et_date.getText().toString(), ""));
                         new Thread(new FTPAPI().new Check_available_file(et_mrcode.getText().toString(),
                                 functionsCall.changedateformat(et_date.getText().toString(), ""), handler,
-                                getSetValues)).start();
+                                getSetValues, false)).start();
                         showprogress(DLG_PROGRESS_UPDATE);
+                    }
+                });
+                alertDialog.show();
+                break;
+
+            case DLG_FILE_NOT_FOUND:
+                AlertDialog.Builder file_not_found = new AlertDialog.Builder(this);
+                file_not_found.setTitle(getResources().getString(R.string.mr_file));
+                file_not_found.setCancelable(false);
+                file_not_found.setView(dialog_layout);
+                tv_msg.setText(getResources().getString(R.string.selected_mr) + getSetValues.getSelected_mr() +
+                        getResources().getString(R.string.file_not_found) + getSetValues.getSelected_date());
+                alertDialog = file_not_found.create();
+                btn_positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                        generate_db_btn.setEnabled(true);
+                    }
+                });
+                alertDialog.show();
+                break;
+
+            case DLG_DOWNLOAD_FILE_FOUND:
+                AlertDialog.Builder dwn_file_found = new AlertDialog.Builder(this);
+                dwn_file_found.setTitle(getResources().getString(R.string.mr_file));
+                dwn_file_found.setCancelable(false);
+                dwn_file_found.setView(dialog_layout);
+                tv_msg.setText(getResources().getString(R.string.selected_mr) + getSetValues.getSelected_mr() +
+                        getResources().getString(R.string.download_file_found));
+                alertDialog = dwn_file_found.create();
+                btn_positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                        generate_db_btn.setEnabled(true);
                     }
                 });
                 alertDialog.show();

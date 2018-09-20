@@ -27,6 +27,9 @@
     <string name="bill_report_details">Bill Report Details</string>
     <string name="no_records">Records</string>
     <string name="no_records_msg">No Records found to bill&#8230; Please update it &amp; proceed&#8230;</string>
+    <string name="selected_mr">Selected MR\u0020</string>
+    <string name="download_file_found">\u0020Download file found but still not yet uploaded file to server(FTP)&#8230; \n Please try later&#8230;</string>
+    <string name="file_not_found">\u0020Download file not found on the selected date\u0020</string>
     <string name="delete_db_menu">Delete DB</string>
     <string name="assets_copy_success">Backup DB file generated successfully&#8230;</string>
     <string name="generate_db_btn">Generate DB</string>
