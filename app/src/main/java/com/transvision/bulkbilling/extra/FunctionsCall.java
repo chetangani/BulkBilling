@@ -15,7 +15,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
@@ -29,7 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.values.GetSetValues;
 import com.transvision.bulkbilling.values.GetSet_MastCust;
 
@@ -1426,9 +1425,9 @@ public class FunctionsCall {
         return encodedBase64;
     }
 
-    public String check_tarrif_rate(String pres_date, String prev_date, Databasehelper databasehelper) {
+    public String check_tarrif_rate(String pres_date, String prev_date, Bulk_Database bulkDatabase) {
         String result, tarrif_date_chg;
-        Cursor data = databasehelper.subdivdetails();
+        Cursor data = bulkDatabase.subdivdetails();
         data.moveToNext();
         tarrif_date_chg = getCursorValue(data, "NWTRF_DATE");
         Date present_date = null, previous_date = null, tarrif_chg_date = null;
@@ -1449,9 +1448,9 @@ public class FunctionsCall {
         return result;
     }
 
-    public void get_fc_tarrif_rate_status(GetSet_MastCust getSetValues, String pres_date, String prev_date, Databasehelper databasehelper) {
+    public void get_fc_tarrif_rate_status(GetSet_MastCust getSetValues, String pres_date, String prev_date, Bulk_Database bulkDatabase) {
         String tarrif_date_chg;
-        Cursor data = databasehelper.subdivdetails();
+        Cursor data = bulkDatabase.subdivdetails();
         data.moveToNext();
         tarrif_date_chg = getCursorValue(data, "NWTRF_DATE");
         String tarrif_date = get_month_date_decreased(tarrif_date_chg, 0, -1);
@@ -1467,9 +1466,9 @@ public class FunctionsCall {
         getSetValues.setFc_normal_value(days_diff - 1);
     }
 
-    public void get_ec_tarrif_rate_status(GetSet_MastCust getSetValues, String pres_date, String prev_date, String units, Databasehelper databasehelper) {
+    public void get_ec_tarrif_rate_status(GetSet_MastCust getSetValues, String pres_date, String prev_date, String units, Bulk_Database bulkDatabase) {
         String tarrif_date_chg;
-        Cursor data = databasehelper.subdivdetails();
+        Cursor data = bulkDatabase.subdivdetails();
         data.moveToNext();
         tarrif_date_chg = getCursorValue(data, "NWTRF_DATE");
         String tarrif_date = get_month_date_decreased(tarrif_date_chg, 0, -1);
@@ -1504,10 +1503,10 @@ public class FunctionsCall {
         return new BigDecimal(value).setScale(decimal, RoundingMode.HALF_EVEN).doubleValue();
     }
 
-    public void check_fac_status(GetSet_MastCust getSetValues, String pres_date, String prev_date, String units, Databasehelper databasehelper) {
+    public void check_fac_status(GetSet_MastCust getSetValues, String pres_date, String prev_date, String units, Bulk_Database bulkDatabase) {
         String fac_start, fac_end;
         int diff = Integer.parseInt(pres_date.substring(0, 2));
-        Cursor data = databasehelper.subdivdetails();
+        Cursor data = bulkDatabase.subdivdetails();
         data.moveToNext();
         fac_start = get_month_date_decreased(getCursorValue(data, "FAC_START"), -1, diff - 1);
         fac_end = get_month_date_decreased(getCursorValue(data, "FAC_END"), -1, diff + 1);
@@ -1602,10 +1601,10 @@ public class FunctionsCall {
         return String.format("%10s", value.getText().toString()).replace(' ', '0');
     }
 
-    public double getTaxStatus(String pres_date, String prev_date, GetSet_MastCust getSetValues, Databasehelper databasehelper, Cursor tax,
+    public double getTaxStatus(String pres_date, String prev_date, GetSet_MastCust getSetValues, Bulk_Database bulkDatabase, Cursor tax,
                                double energy_charges) {
         String tax_date;
-        Cursor data = databasehelper.subdivdetails();
+        Cursor data = bulkDatabase.subdivdetails();
         data.moveToNext();
         tax_date = getCursorValue(data, "TAX_NEW_EFFECT");
         data.close();

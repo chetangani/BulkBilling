@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.util.Log;
 
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 
 import org.apache.commons.lang3.StringUtils;
@@ -70,10 +70,10 @@ public class ClassCalculation {
     private double[] arrFC_old = new double[10];
     private double[] arrEC1_old = new double[10];
 
-    private Databasehelper dbh;
+    private Bulk_Database dbh;
 
-    public ClassCalculation(Databasehelper databasehelper) {
-        this.dbh = databasehelper;
+    public ClassCalculation(Bulk_Database bulkDatabase) {
+        this.dbh = bulkDatabase;
     }
 
     private FunctionsCall fcall = new FunctionsCall();
@@ -678,17 +678,17 @@ public class ClassCalculation {
     }
 
     // ---------------------- Function for Extra Charges in the Bill like Taxes,Penalties ----------------------
-    public void billExtraCharges(String pres_date, String prev_date, GetSet_MastCust getSetValues, Databasehelper databasehelper, Cursor c) {
+    public void billExtraCharges(String pres_date, String prev_date, GetSet_MastCust getSetValues, Bulk_Database bulkDatabase, Cursor c) {
         if (!flagRebate.equals("3")) {
             /*String taxPer = c.getString(c.getColumnIndex("TAX_PER"));
             double intTaxPer = Double.parseDouble(taxPer);*/
             if (!tariff.equals("10")) {
-                dblTax = fcall.getTaxStatus(pres_date, prev_date, getSetValues, databasehelper, c, EC);
+                dblTax = fcall.getTaxStatus(pres_date, prev_date, getSetValues, bulkDatabase, c, EC);
 //                dblTax = EC * intTaxPer;
             } else {
                 double readUnits = Double.parseDouble(Readingconsume);
                 if (readUnits > 40) {
-                    dblTax = fcall.getTaxStatus(pres_date, prev_date, getSetValues, databasehelper, c, EC);
+                    dblTax = fcall.getTaxStatus(pres_date, prev_date, getSetValues, bulkDatabase, c, EC);
 //                    dblTax = EC * intTaxPer;
                 } else dblTax = 0.00;
             }

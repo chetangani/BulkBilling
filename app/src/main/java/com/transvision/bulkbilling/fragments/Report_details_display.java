@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.transvision.bulkbilling.R;
 import com.transvision.bulkbilling.ReportsActivity;
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 
 import java.util.Objects;
 
@@ -17,7 +17,7 @@ public class Report_details_display extends Fragment {
 
     View view;
 
-    Databasehelper databasehelper;
+    Bulk_Database bulkDatabase;
 
     public Report_details_display() {
         // Required empty public constructor
@@ -35,7 +35,7 @@ public class Report_details_display extends Fragment {
     }
 
     private void initialize() {
-        databasehelper = ((ReportsActivity) Objects.requireNonNull(getActivity())).getDatabasehelper();
+        bulkDatabase = ((ReportsActivity) Objects.requireNonNull(getActivity())).getBulkDatabase();
     }
 
 }

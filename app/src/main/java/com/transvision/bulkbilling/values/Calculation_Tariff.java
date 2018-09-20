@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 
 import java.io.File;
@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 public class Calculation_Tariff {
 
     public void tariff_calculation(String tariff, String rrebate, String rebate_flag, String account_id, String units,
-                                   Databasehelper database, GetSet_MastCust getSetValues) {
+                                   Bulk_Database database, GetSet_MastCust getSetValues) {
         switch (tariff) {
             case "10":
                 int consUnits = Integer.parseInt(units);
@@ -143,9 +143,9 @@ public class Calculation_Tariff {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void insertintomastoutandtextfile(Context context, String consid) {
         FunctionsCall functionsCall = new FunctionsCall();
-        Databasehelper databasehelper = new Databasehelper(context);
-        databasehelper.openDatabase();
-        Cursor data = databasehelper.reportbyid(consid);
+        Bulk_Database bulkDatabase = new Bulk_Database(context);
+        bulkDatabase.openDatabase();
+        Cursor data = bulkDatabase.reportbyid(consid);
         data.moveToNext();
         String MONTH = functionsCall.getCursorValue(data, "MONTH");
         String READDATE = functionsCall.getCursorValue(data, "READDATE");
@@ -373,7 +373,7 @@ public class Calculation_Tariff {
         cv.put("CREADJ", CREADJ);
         cv.put("PREADKVAH", PREADKVAH);
 
-        Cursor subdiv_data = databasehelper.subdivdetails();
+        Cursor subdiv_data = bulkDatabase.subdivdetails();
         subdiv_data.moveToNext();
         String SUBDIVCODE = subdiv_data.getString(subdiv_data.getColumnIndex("SUBDIV_CODE"));
         subdiv_data.close();
@@ -389,7 +389,7 @@ public class Calculation_Tariff {
         collection_values.put("SUB_DIVISION", SUBDIVCODE);
         collection_values.put("MRCODE", MRCODE);
         collection_values.put("PAYABLE_AMOUNT", PAYABLE);
-        databasehelper.insertInCollectionInput(collection_values);
+        bulkDatabase.insertInCollectionInput(collection_values);
 
         String path = functionsCall.filepath("Textfile");
         String filename = "TextReport.txt";

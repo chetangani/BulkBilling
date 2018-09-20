@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.fragments.Billed_reports_list;
 import com.transvision.bulkbilling.fragments.Report_details_display;
 
@@ -18,7 +18,7 @@ public class ReportsActivity extends AppCompatActivity {
 
     private Fragment fragment;
     FragmentManager fm;
-    Databasehelper databasehelper;
+    Bulk_Database bulkDatabase;
 
     public enum Steps {
         FORM0(Billed_reports_list.class),
@@ -40,8 +40,8 @@ public class ReportsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reports);
 
-        databasehelper = new Databasehelper(this);
-        if (databasehelper.openDatabase())
+        bulkDatabase = new Bulk_Database(this);
+        if (bulkDatabase.openDatabase())
             switchContent(Steps.FORM0);
         else finish();
     }
@@ -78,13 +78,13 @@ public class ReportsActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    public Databasehelper getDatabasehelper() {
-        return databasehelper;
+    public Bulk_Database getBulkDatabase() {
+        return bulkDatabase;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        databasehelper.close();
+        bulkDatabase.close();
     }
 }

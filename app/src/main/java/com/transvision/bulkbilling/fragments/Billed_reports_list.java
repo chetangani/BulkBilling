@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.transvision.bulkbilling.R;
 import com.transvision.bulkbilling.ReportsActivity;
 import com.transvision.bulkbilling.adapters.Report_adapter;
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 import com.transvision.bulkbilling.values.GetSetValues;
 
@@ -30,7 +30,7 @@ public class Billed_reports_list extends Fragment {
     Toolbar toolbar;
     AppBarLayout.LayoutParams params;
 
-    Databasehelper databasehelper;
+    Bulk_Database bulkDatabase;
     FunctionsCall functionsCall;
 
     RecyclerView status_report_view;
@@ -74,7 +74,7 @@ public class Billed_reports_list extends Fragment {
     }
 
     private void initialize() {
-        databasehelper = ((ReportsActivity) Objects.requireNonNull(getActivity())).getDatabasehelper();
+        bulkDatabase = ((ReportsActivity) Objects.requireNonNull(getActivity())).getBulkDatabase();
 
         functionsCall = new FunctionsCall();
 
@@ -89,7 +89,7 @@ public class Billed_reports_list extends Fragment {
     private void setValues() {
         int slno = 0;
         status_list.clear();
-        Cursor data = databasehelper.getbilledvalues();
+        Cursor data = bulkDatabase.getbilledvalues();
         if (data.getCount() > 0) {
             while (data.moveToNext()) {
                 GetSetValues getSetValues = new GetSetValues();

@@ -9,8 +9,8 @@ public class GetSet_MastCust {
             INT_ON_DEP, SO_FEEDER_TC_POLE, TARIFF_NAME, PREV_READ_DATE, BILL_DAYS, MTR_SERIAL_NO, CHQ_DISSHONOUR_FLAG, CHQ_DISHONOUR_DATE,
             FDRNAME, TCCODE, MTR_FLAG, INVENTORY_LOAD, HP, BMDKW, CONNLDHP, CONNLDKW, CREADJ, READKVAH, GPS_LAT, TOD_CHARGES,
             GPS_LONG, AADHAAR, MAIL, ELECTION, RATION, WATER, HOUSE_NO, FDRCODE, TCNAME, PRES_RDG, PRES_STS, TOD_CURRENT1, TOD_CURRENT3,
-            units, FIX, ENGCHG, REBATE_AMOUNT, TAX_AMOUNT, BMD_PENALTY, PF_PENALTY, PAYABLE, GOK_SUBSIDY, BILL_NO,
-            PAYABLE_REAL, PAYABLE_PROFIT, PAYABLE_LOSS, CHARITABLE_RBT_AMT, CURR_BILL_AMOUNT, pd_penalty, column_name;
+            units, FIX, ENGCHG, REBATE_AMOUNT, TAX_AMOUNT, BMD_PENALTY, PF_PENALTY, PAYABLE, GOK_SUBSIDY, BILL_NO, PAYABLE_REAL, PAYABLE_PROFIT,
+            PAYABLE_LOSS, CHARITABLE_RBT_AMT, CURR_BILL_AMOUNT, pd_penalty, column_name, BATTERY_CHARGE, SIGNAL_STRENGTH, IMGADD;
     private String COMPANY, SUBDIV_CODE, SUB_DIVISION, MOBILE_NO, HELPLINE_NO, COLLECTION_FLAG, COLL_MAX_AMOUNT, COLLECTION_DATE, LOGO_PRINT,
             BARCODE_PRINT, SLABS_PRINT, BIOMETRIC_TEMPLATE, MRNAME, MRPASSWD, BILL_OPEN_TIME, BILL_CLOSE_TIME, BILLING_STATUS, MACHINE_ID,
             DB_VERSION, SERVER_DOMAIN, BIOMETRIC_INTERVAL, BIOMETRIC_ENABLE, BILLING_MMYYYY, FTP_UPLOAD, FTP_DOWNLOAD, BIO_PRINT_CNT,
@@ -18,7 +18,7 @@ public class GetSet_MastCust {
             DL_FLAG, NWTRF_DATE, FAC_START, FAC_END, TAX_NEW_EFFECT;
     private String INSERT_SSNO, INSERT_EXTRA1, INSERT_DATA1, INSERT_EXTRA2, INSERT_DATA2, INSERT_BMDVAL, INSERT_INTEREST_AMT,
             INSERT_REBATE_AMOUNT, INSERT_BMD_PENALTY;
-    private int old_days=0, normal_days=0;
+    private int old_days=0, normal_days=0, bill_read_count=0;
     private double fc_old_value=0, fc_normal_value=0, ec_old_value=0, ec_normal_value=0, fac_days=0, fac_remaining_days=0, fec;
     private String tax_days_new="", tax_days_old="";
     private Cursor current_data=null, old_data=null;
@@ -1399,5 +1399,37 @@ public class GetSet_MastCust {
 
     public void setBILL_NO(String BILL_NO) {
         this.BILL_NO = BILL_NO;
+    }
+
+    public String getBATTERY_CHARGE() {
+        return BATTERY_CHARGE;
+    }
+
+    public void setBATTERY_CHARGE(String BATTERY_CHARGE) {
+        this.BATTERY_CHARGE = BATTERY_CHARGE;
+    }
+
+    public String getSIGNAL_STRENGTH() {
+        return SIGNAL_STRENGTH;
+    }
+
+    public void setSIGNAL_STRENGTH(String SIGNAL_STRENGTH) {
+        this.SIGNAL_STRENGTH = SIGNAL_STRENGTH;
+    }
+
+    public String getIMGADD() {
+        return IMGADD;
+    }
+
+    public void setIMGADD(String IMGADD) {
+        this.IMGADD = IMGADD;
+    }
+
+    public int getBill_read_count() {
+        return bill_read_count;
+    }
+
+    public void setBill_read_count(int bill_read_count) {
+        this.bill_read_count = bill_read_count;
     }
 }

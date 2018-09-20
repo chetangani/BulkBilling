@@ -27,7 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 import com.transvision.bulkbilling.ftp.FTPAPI;
 import com.transvision.bulkbilling.values.Bulk_Reading;
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     GetSet_MastCust getSetMastCust;
     GetSet_Mast_Values getSetMastValues;
     GetSetValues getSetValues;
-    Databasehelper databasehelper;
+    Bulk_Database bulkDatabase;
     FunctionsCall functionsCall;
     AlertDialog progress_dialog;
 
@@ -100,13 +100,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tv_completed.setText(String.format("%d", read_count));
                     read_count++;
                     if (read_count <= max_count) {
-                        databasehelper.updatebill(read_count);
+                        bulkDatabase.updatebill(read_count);
                         getSetMastCust = new GetSet_MastCust();
                         update_count(max_count, read_count);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                getSetMastValues.getvalues(getSetMastCust, databasehelper);
+                                getSetMastValues.getvalues(getSetMastCust, bulkDatabase, true);
                             }
                         }, 200);
                     } else {
@@ -190,11 +190,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case MAST_CUST_FILE_EXTRACTED:
-                    new Bulk_Reading().read_cust_values(MainActivity.this, databasehelper, handler);
+                    new Bulk_Reading().read_cust_values(MainActivity.this, bulkDatabase, handler);
                     break;
 
                 case MAST_OUT_FILE_EXTRACTED:
-                    new Bulk_Reading().read_out_values(MainActivity.this, databasehelper, handler);
+                    new Bulk_Reading().read_out_values(MainActivity.this, bulkDatabase, handler);
                     break;
 
                 case MAST_CUST_FILE_UPDATED:
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.start_bulk_billing_btn:
                 showprogress(DLG_PROGRESS);
                 getSetMastValues = new GetSet_Mast_Values(handler);
-                getSetMastValues.getvalues(getSetMastCust, databasehelper);
+                getSetMastValues.getvalues(getSetMastCust, bulkDatabase, true);
                 break;
 
             case R.id.bulk_bill_reports_btn:
@@ -277,22 +277,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_bulk_db_delete:
-                databasehelper.db_delete(handler);
+                bulkDatabase.db_delete(handler);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void enable_btn() {
-        databasehelper = new Databasehelper(MainActivity.this);
-        if (databasehelper.openDatabase())
+        bulkDatabase = new Bulk_Database(MainActivity.this);
+        if (bulkDatabase.openDatabase())
             initial_data();
         else functionsCall.copyAssets(this, handler);
     }
 
     @SuppressLint("DefaultLocale")
     private void initial_data() {
-        Cursor data = databasehelper.getData();
+        Cursor data = bulkDatabase.getData();
         if (data.getCount() > 0) {
             start_btn.setEnabled(true);
             max_count = data.getCount();
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_to_bill.setText(String.format("%d", max_count));
             tv_records.setText(String.format("%d", max_count));
 
-            Cursor out_data = databasehelper.billed();
+            Cursor out_data = bulkDatabase.billed();
             if (out_data.getCount() > 0) {
                 tv_to_bill.setText(String.format("%d", (max_count - out_data.getCount())));
                 tv_completed.setText(String.format("%d", out_data.getCount()));
@@ -634,6 +634,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        databasehelper.close();
+        bulkDatabase.close();
     }
 }

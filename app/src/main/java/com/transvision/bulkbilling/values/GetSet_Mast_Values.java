@@ -6,7 +6,7 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.os.Handler;
 import android.text.TextUtils;
 
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +39,8 @@ public class GetSet_Mast_Values {
         this.handler = handler;
     }
 
-    public void getvalues(GetSet_MastCust getSetMastCust, Databasehelper databasehelper) {
-        Cursor data1 = databasehelper.subdivdetails();
+    public void getvalues(GetSet_MastCust getSetMastCust, Bulk_Database bulkDatabase, boolean bulk_billing) {
+        Cursor data1 = bulkDatabase.subdivdetails();
         data1.moveToNext();
         try {
             getSetMastCust.setFec(functionsCall.convert_decimal(functionsCall.getCursorValue(data1, "FEC")));
@@ -51,7 +51,7 @@ public class GetSet_Mast_Values {
         data1.close();
 
         try {
-            Cursor check_data = databasehelper.getBilledRecordData();
+            Cursor check_data = bulkDatabase.getBilledRecordData();
             if (check_data.getCount() > 0) {
                 check_data.moveToNext();
                 String pres_date = functionsCall.getCursorValue(check_data, "READDATE");
@@ -60,49 +60,51 @@ public class GetSet_Mast_Values {
                 if (days_diff > 31) {
                     double dl_diff = (days_diff / 30);
                     dl_diff = dl_diff - 1;
-                    Cursor updatedl = databasehelper.updateDLrecord(""+dl_diff);
+                    Cursor updatedl = bulkDatabase.updateDLrecord(""+dl_diff);
                     updatedl.moveToNext();
                     updatedl.close();
                 } else if (days_diff < 28) {
                     double dl_diff = ((days_diff+1) / 30);
                     dl_diff = dl_diff - 1;
-                    Cursor updatedl = databasehelper.updateDLrecord(""+dl_diff);
+                    Cursor updatedl = bulkDatabase.updateDLrecord(""+dl_diff);
                     updatedl.moveToNext();
                     updatedl.close();
                 }
             }
             check_data.close();
-            Cursor data = databasehelper.getBilledRecordData();
+            Cursor data = bulkDatabase.getBilledRecordData();
             data.moveToNext();
             set_Mast_Cust_values(data, getSetMastCust);
-            if (check_column(data, "PRES_RDG")) {
-                getSetMastCust.setColumn_name("PRES_RDG");
-                handler.sendEmptyMessage(COLUMNS_ERROR);
-                return;
-            } else getSetMastCust.setPRES_RDG(functionsCall.getCursorValue(data, "PRES_RDG"));
-            if (check_column(data, "PRES_STS")) {
-                getSetMastCust.setColumn_name("PRES_STS");
-                handler.sendEmptyMessage(COLUMNS_ERROR);
-                return;
-            } else getSetMastCust.setPRES_STS(functionsCall.getCursorValue(data, "PRES_STS"));
-            if (check_column(data, "TOD_CURRENT1")) {
-                getSetMastCust.setColumn_name("TOD_CURRENT1");
-                handler.sendEmptyMessage(COLUMNS_ERROR);
-                return;
-            } else getSetMastCust.setTOD_CURRENT1(functionsCall.getCursorValue(data, "TOD_CURRENT1"));
-            if (check_column(data, "TOD_CURRENT3")) {
-                getSetMastCust.setColumn_name("TOD_CURRENT3");
-                handler.sendEmptyMessage(COLUMNS_ERROR);
-                return;
-            } else getSetMastCust.setTOD_CURRENT3(functionsCall.getCursorValue(data, "TOD_CURRENT3"));
-            Cursor ssno = databasehelper.addingSSNO();
+            if (bulk_billing) {
+                if (check_column(data, "PRES_RDG")) {
+                    getSetMastCust.setColumn_name("PRES_RDG");
+                    handler.sendEmptyMessage(COLUMNS_ERROR);
+                    return;
+                } else getSetMastCust.setPRES_RDG(functionsCall.getCursorValue(data, "PRES_RDG"));
+                if (check_column(data, "PRES_STS")) {
+                    getSetMastCust.setColumn_name("PRES_STS");
+                    handler.sendEmptyMessage(COLUMNS_ERROR);
+                    return;
+                } else getSetMastCust.setPRES_STS(functionsCall.getCursorValue(data, "PRES_STS"));
+                if (check_column(data, "TOD_CURRENT1")) {
+                    getSetMastCust.setColumn_name("TOD_CURRENT1");
+                    handler.sendEmptyMessage(COLUMNS_ERROR);
+                    return;
+                } else getSetMastCust.setTOD_CURRENT1(functionsCall.getCursorValue(data, "TOD_CURRENT1"));
+                if (check_column(data, "TOD_CURRENT3")) {
+                    getSetMastCust.setColumn_name("TOD_CURRENT3");
+                    handler.sendEmptyMessage(COLUMNS_ERROR);
+                    return;
+                } else getSetMastCust.setTOD_CURRENT3(functionsCall.getCursorValue(data, "TOD_CURRENT3"));
+            }
+            Cursor ssno = bulkDatabase.addingSSNO();
             if (ssno.getCount() > 0) {
                 ssno.moveToNext();
                 getSetMastCust.setSSNO(ssno.getString(ssno.getColumnIndex("SSNO")));
             } else getSetMastCust.setSSNO("1");
             data.close();
             ssno.close();
-            setValues(databasehelper, getSetMastCust);
+            setValues(bulkDatabase, getSetMastCust, bulk_billing);
         } catch (Exception e) {
             e.printStackTrace();
             handler.sendEmptyMessage(READ_MAST_CUST_ERROR);
@@ -257,8 +259,8 @@ public class GetSet_Mast_Values {
         return result == -1;
     }
 
-    private void setValues(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
-        ClassCalculation classCalculation = new ClassCalculation(databasehelper);
+    private void setValues(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust, boolean bulk_billing) {
+        ClassCalculation classCalculation = new ClassCalculation(bulkDatabase);
         classCalculation.settariff(getSetMastCust.getTARIFF());
         int Present_STS = Integer.parseInt(getSetMastCust.getPRES_STS());
         int intTodFlag = Integer.parseInt(getSetMastCust.getTOD_FLAG());
@@ -280,7 +282,7 @@ public class GetSet_Mast_Values {
                             ""+functionsCall.convert_int(getSetMastCust.getPRES_RDG())));
                     classCalculation.setconsumtion(getSetMastCust.getUnits());
                 } else {
-                    Cursor data = databasehelper.subdivdetails();
+                    Cursor data = bulkDatabase.subdivdetails();
                     data.moveToNext();
                     String dl_flag = data.getString(data.getColumnIndexOrThrow("DL_FLAG"));
                     if (!TextUtils.isEmpty(dl_flag)) {
@@ -310,9 +312,9 @@ public class GetSet_Mast_Values {
             classCalculation.setconsumtion(""+units);
         }
         if (Present_STS == 1 || Present_STS == 2 || Present_STS == 7 || Present_STS == 15) {
-            Cursor updatedl = databasehelper.updateDLrecord(""+0);
+            Cursor updatedl = bulkDatabase.updateDLrecord(""+0);
             updatedl.moveToNext();
-            Cursor data = databasehelper.getBilledRecordData();
+            Cursor data = bulkDatabase.getBilledRecordData();
             data.moveToNext();
             getSetMastCust.setDLCOUNT(functionsCall.getCursorValue(data, "DLCOUNT"));
         }
@@ -332,7 +334,7 @@ public class GetSet_Mast_Values {
         classCalculation.setCredit_adj(functionsCall.convert_decimal(getSetMastCust.getCREADJ()));
         if (getSetMastCust.getEXTRA2().equals("FAC")) {
             functionsCall.check_fac_status(getSetMastCust, getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(),
-                    getSetMastCust.getUnits(), databasehelper);
+                    getSetMastCust.getUnits(), bulkDatabase);
             getSetMastCust.setDATA2(""+(getSetMastCust.getFec() * getSetMastCust.getFac_days()));
             functionsCall.logStatus("days: "+getSetMastCust.getFac_days());
             functionsCall.logStatus("remaining: "+getSetMastCust.getFac_remaining_days());
@@ -340,9 +342,9 @@ public class GetSet_Mast_Values {
         classCalculation.setdata2(functionsCall.convert_decimal(getSetMastCust.getDATA2()));
         if (getSetMastCust.getTARIFF().equals("70")) {
             classCalculation.setdays70tariff(getSetMastCust.getBILL_DAYS());
-            pdreading(databasehelper, getSetMastCust);
+            pdreading(bulkDatabase, getSetMastCust);
         }
-        start_calculation(databasehelper, getSetMastCust, classCalculation);
+        start_calculation(bulkDatabase, getSetMastCust, classCalculation, bulk_billing);
     }
 
     private String dialover(String last_reading, String pre_reading) {
@@ -356,22 +358,19 @@ public class GetSet_Mast_Values {
         return String.valueOf(s10);
     }
 
-    private void pdreading(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
+    private void pdreading(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust) {
         if (!getSetMastCust.getBMDVAL().equals("")) {
-            Cursor c14 = databasehelper.getTarrifDataBJ("0", getSetMastCust.getTARIFF());
+            Cursor c14 = bulkDatabase.getTarrifDataBJ("0", getSetMastCust.getTARIFF());
             getSetMastCust.setPd_penalty(functionsCall.pdcalculation(getSetMastCust.getBMDVAL(), c14, getSetMastCust.getSANCKW(),
                     getSetMastCust.getBILL_DAYS()));
-        } else {
-            Cursor c14 = databasehelper.getTarrifDataBJ("0", getSetMastCust.getTARIFF());
-            getSetMastCust.setPd_penalty(functionsCall.pdcalculation(getSetMastCust.getBMDVAL(), c14, getSetMastCust.getSANCKW(),
-                    getSetMastCust.getBILL_DAYS()));
-        }
+        } else getSetMastCust.setPd_penalty("0.00");
     }
 
-    private void start_calculation(Databasehelper databasehelper, GetSet_MastCust getSetMastCust, ClassCalculation calculation) {
+    private void start_calculation(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust, ClassCalculation calculation,
+                                   boolean bulk_billing) {
         Calculation_Tariff calculationTariff = new Calculation_Tariff();
         calculationTariff.tariff_calculation(getSetMastCust.getTARIFF(), getSetMastCust.getRREBATE(), getSetMastCust.getREBATE_FLAG(),
-                getSetMastCust.getCONSNO(), getSetMastCust.getUnits(), databasehelper, getSetMastCust);
+                getSetMastCust.getCONSNO(), getSetMastCust.getUnits(), bulkDatabase, getSetMastCust);
         Cursor current_data = getSetMastCust.getCurrent_data();
         Cursor old_data = getSetMastCust.getOld_data();
         if (current_data.getCount() > 0) {
@@ -386,15 +385,15 @@ public class GetSet_Mast_Values {
             calculation.FcCalculation(current_data, getSetMastCust.getREBATE_FLAG(), cons_dlcount, 0);
             calculation.EcCalculation(current_data, Double.parseDouble(getSetMastCust.getUnits()), cons_dlcount, 0);
         } else {
-            switch (functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), databasehelper)) {
+            switch (functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), bulkDatabase)) {
                 case SPLIT_TARRIF_CALCULATION:
                     functionsCall.get_fc_tarrif_rate_status(getSetMastCust, getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(),
-                            databasehelper);
+                            bulkDatabase);
                     calculation.FcCalculation(current_data, getSetMastCust.getREBATE_FLAG(), getSetMastCust.getFc_normal_value(), 0);
                     calculation.FcCalculation(old_data, getSetMastCust.getREBATE_FLAG(), getSetMastCust.getFc_old_value(), 1);
 
                     functionsCall.get_ec_tarrif_rate_status(getSetMastCust, getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(),
-                            getSetMastCust.getUnits(), databasehelper);
+                            getSetMastCust.getUnits(), bulkDatabase);
                     calculation.EcCalculation(current_data, getSetMastCust.getEc_normal_value(), getSetMastCust.getFc_normal_value(), 0);
                     calculation.EcCalculation(old_data, getSetMastCust.getEc_old_value(), getSetMastCust.getFc_old_value(), 1);
                     break;
@@ -417,7 +416,7 @@ public class GetSet_Mast_Values {
             calculation.billPenalties(current_data, getSetMastCust.getUnits());
         }
         getSetMastCust.setPF_PENALTY(""+calculation.pfPenality());
-        calculation.billExtraCharges(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), getSetMastCust, databasehelper, current_data);
+        calculation.billExtraCharges(getSetMastCust.getREADDATE(), getSetMastCust.getPREV_READ_DATE(), getSetMastCust, bulkDatabase, current_data);
         getSetMastCust.setBMD_PENALTY(""+calculation.bmdPenalities(functionsCall.convert_decimal(getSetMastCust.getBMDVAL()),
                 getSetMastCust.getINVENTORY_LOAD(), getSetMastCust.getPF_FLAG(), getSetMastCust.getBMDKW(), getSetMastCust.getREBATE_FLAG()));
         if (getSetMastCust.getTARIFF().equals("70")) {
@@ -465,7 +464,7 @@ public class GetSet_Mast_Values {
         } else getSetMastCust.setENGCHG(""+calculation.totalEC());
         getSetMastCust.setFIX(""+calculation.totalFC());
         getSetMastCust.setTAX_AMOUNT(functionsCall.decimalround(calculation.tax()));
-        if (databasehelper.checkinserteddata(getSetMastCust.getCONSNO()))
+        if (bulkDatabase.checkinserteddata(getSetMastCust.getCONSNO()))
             return;
         if (Integer.parseInt(getSetMastCust.getUnits()) < 0)
             return;
@@ -475,10 +474,18 @@ public class GetSet_Mast_Values {
             return;
         if (functionsCall.convert_decimal(getSetMastCust.getENGCHG()) < 0)
             return;
-        insertIntoTable(databasehelper, getSetMastCust, calculation);
+        if (bulk_billing) {
+            getSetMastCust.setBill_read_count(read_count);
+            getSetMastCust.setIMGADD("noimage");
+            getSetMastCust.setGPS_LAT("0.0");
+            getSetMastCust.setGPS_LONG("0.0");
+            getSetMastCust.setBATTERY_CHARGE("0");
+            getSetMastCust.setSIGNAL_STRENGTH("0");
+        }
+        insertIntoTable(bulkDatabase, getSetMastCust, calculation);
     }
 
-    private void insertIntoTable(Databasehelper databasehelper, GetSet_MastCust getSetMastCust, ClassCalculation calculation) {
+    private void insertIntoTable(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust, ClassCalculation calculation) {
         DecimalFormat num = new DecimalFormat("##0.00");
 
         if (TextUtils.isEmpty(getSetMastCust.getSSNO()))
@@ -601,16 +608,16 @@ public class GetSet_Mast_Values {
         cv.put("TOD_CURRENT3", getSetMastCust.getTOD_CURRENT3());
         cv.put("GOK_SUBSIDY", getSetMastCust.getGOK_SUBSIDY());
         cv.put("DEM_REVENUE", getSetMastCust.getCURR_BILL_AMOUNT());
-        cv.put("GPS_LAT", "0.0");
-        cv.put("GPS_LONG", "0.0");
+        cv.put("GPS_LAT", getSetMastCust.getGPS_LAT());
+        cv.put("GPS_LONG", getSetMastCust.getGPS_LONG());
         cv.put("ONLINE_FLAG", "N");
-        cv.put("IMGADD", "noimage");
+        cv.put("IMGADD", getSetMastCust.getIMGADD());
         cv.put("PAYABLE_REAL", getSetMastCust.getPAYABLE_REAL());
         cv.put("PAYABLE_PROFIT", getSetMastCust.getPAYABLE_PROFIT());
         cv.put("PAYABLE_LOSS", getSetMastCust.getPAYABLE_LOSS());
         cv.put("BILL_PRINTED", "N");
-        cv.put("BATTERY_CHARGE", "0");
-        cv.put("SIGNAL_STRENGTH", "0");
+        cv.put("BATTERY_CHARGE", getSetMastCust.getBATTERY_CHARGE());
+        cv.put("SIGNAL_STRENGTH", getSetMastCust.getSIGNAL_STRENGTH());
 
         //Inserting totalfs values
         if ((""+num.format(getSetMastCust.getArrFc()[1])).equals("0.00"))
@@ -694,12 +701,12 @@ public class GetSet_Mast_Values {
         cv.put("TCNAME", getSetMastCust.getTCNAME());
         cv.put("RENT", ""+calculation.getPrepaid_rent());
         cv.put("DL_FC", ""+getSetMastCust.getArrdlFslab()[1] + "," + ""+getSetMastCust.getArrdlFslab()[2]);
-        if (databasehelper.insertInTable(cv))
-            insert_old_slabs(databasehelper, getSetMastCust, calculation);
+        if (bulkDatabase.insertInTable(cv))
+            insert_old_slabs(bulkDatabase, getSetMastCust, calculation);
         else handler.sendEmptyMessage(INSERT_MAST_OUT_ERROR);
     }
 
-    private void insert_old_slabs(Databasehelper databasehelper, GetSet_MastCust getSetMastCust, ClassCalculation calculation) {
+    private void insert_old_slabs(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust, ClassCalculation calculation) {
         DecimalFormat num = new DecimalFormat("##0.00");
         ContentValues slabs_cv = new ContentValues();
         slabs_cv.put("READDATE", functionsCall.changedateformat(getSetMastCust.getREADDATE(), ""));
@@ -765,21 +772,21 @@ public class GetSet_Mast_Values {
         slabs_cv.put("FAC_NULL", getSetMastCust.getFac_remaining_days());
         slabs_cv.put("DL_FC", ""+getSetMastCust.getArrdlFslab_old()[1] + "," + ""+getSetMastCust.getArrdlFslab_old()[2]);
 
-        print_text_file(databasehelper, getSetMastCust);
+        print_text_file(bulkDatabase, getSetMastCust);
 
         //noinspection ConstantConditions
         if (functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 1 || functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 2 ||
                 functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 7 || functionsCall.convert_int(getSetMastCust.getPRES_STS()) != 15) {
             if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(),
-                    getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION)) {
-                if (databasehelper.insertInSlabsTable(slabs_cv))
+                    getSetMastCust.getPREV_READ_DATE(), bulkDatabase), SPLIT_TARRIF_CALCULATION)) {
+                if (bulkDatabase.insertInSlabsTable(slabs_cv))
                     handler.sendEmptyMessage(INSERT_SUCCESS);
                 else handler.sendEmptyMessage(INSERT_MAST_OLD_OUT_ERROR);
             } else handler.sendEmptyMessage(INSERT_SUCCESS);
         } else handler.sendEmptyMessage(INSERT_SUCCESS);
     }
 
-    public boolean insert_subdiv_details(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
+    public boolean insert_subdiv_details(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust) {
         ContentValues cv = new ContentValues();
         cv.put("COMPANY", getSetMastCust.getCOMPANY());
         cv.put("SUBDIV_CODE", getSetMastCust.getSUBDIV_CODE());
@@ -822,10 +829,10 @@ public class GetSet_Mast_Values {
         cv.put("FAC_START", getSetMastCust.getFAC_START());
         cv.put("FAC_END", getSetMastCust.getFAC_END());
         cv.put("TAX_NEW_EFFECT", getSetMastCust.getTAX_NEW_EFFECT());
-        return databasehelper.insert_Subdiv_details(cv);
+        return bulkDatabase.insert_Subdiv_details(cv);
     }
 
-    private void print_text_file(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
+    private void print_text_file(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust) {
         DecimalFormat num = new DecimalFormat("##0.00");
         double rep_dlcount = Double.parseDouble(getSetMastCust.getDLCOUNT());
         ArrayList<String> addresslist = new ArrayList<>();
@@ -833,9 +840,9 @@ public class GetSet_Mast_Values {
         String gkpays = getSetMastCust.getGOK_SUBSIDY();
         String rep_payable = getSetMastCust.getPAYABLE();
         String rep_cur_bill, rep_dl_days_count;
-        String status = databasehelper.get_status(getSetMastCust.getPRES_STS());
+        String status = bulkDatabase.get_status(getSetMastCust.getPRES_STS());
 
-        Cursor data = databasehelper.subdivdetails();
+        Cursor data = bulkDatabase.subdivdetails();
         data.moveToNext();
         set_Subdiv_Details(data, getSetMastCust);
         data.close();
@@ -937,7 +944,7 @@ public class GetSet_Mast_Values {
                 stringBuilder.append(functionsCall.aligncenter("Fixed Charges ", 42)).append("\n");
             } else {
                 if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(),
-                        getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                        getSetMastCust.getPREV_READ_DATE(), bulkDatabase), SPLIT_TARRIF_CALCULATION))
                     stringBuilder.append(functionsCall.aligncenter("Fixed Charges Present ( "+ ""+getSetMastCust.getNormal_days()+" )",
                             42)).append("\n");
                 else stringBuilder.append(functionsCall.aligncenter("Fixed Charges ", 42)).append("\n");
@@ -946,7 +953,7 @@ public class GetSet_Mast_Values {
             if (!(""+num.format(getSetMastCust.getArrFc()[1])).equals("0.00")) {
                 if (rep_dlcount != 0) {
                     if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(),
-                            getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                            getSetMastCust.getPREV_READ_DATE(), bulkDatabase), SPLIT_TARRIF_CALCULATION))
                         stringBuilder.append("  ")
                                 .append(functionsCall.alignright(functionsCall.decimal_format(""+(getSetMastCust.getFc_normal_value() + 1)), 6))
                                 .append(" ").append("x")
@@ -986,7 +993,7 @@ public class GetSet_Mast_Values {
                     BigDecimal bd1 = new BigDecimal(""+getSetMastCust.getArrdlFslab()[2]).setScale(2, RoundingMode.HALF_EVEN);
                     String rep_dl_fslab2 = functionsCall.decimal_format(bd1.doubleValue()+"");
                     if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(),
-                            getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                            getSetMastCust.getPREV_READ_DATE(), bulkDatabase), SPLIT_TARRIF_CALCULATION))
                         stringBuilder.append("  ").append(functionsCall.alignright(""+(getSetMastCust.getFc_normal_value() + 1), 6))
                                 .append(" ").append("x").append(functionsCall.alignright(rep_dl_fslab2, 6)).append(" ")
                                 .append("x").append(functionsCall.alignright(functionsCall.decimal_format(
@@ -1009,7 +1016,7 @@ public class GetSet_Mast_Values {
                 stringBuilder.append(functionsCall.aligncenter("Energy Charges", 42)).append("\n");
             } else {
                 if (StringUtils.startsWithIgnoreCase(functionsCall.check_tarrif_rate(getSetMastCust.getREADDATE(),
-                        getSetMastCust.getPREV_READ_DATE(), databasehelper), SPLIT_TARRIF_CALCULATION))
+                        getSetMastCust.getPREV_READ_DATE(), bulkDatabase), SPLIT_TARRIF_CALCULATION))
                     stringBuilder.append(functionsCall.aligncenter(
                             "Energy Charges Present ( "+""+getSetMastCust.getNormal_days()+" ) ", 42)).append("\n");
                 else stringBuilder.append(functionsCall.aligncenter("Energy Charges", 42)).append("\n");
@@ -1220,7 +1227,7 @@ public class GetSet_Mast_Values {
                     .append("\n");
             stringBuilder.append("\n");
             stringBuilder.append(functionsCall.line(35)).append(" ")
-                    .append(read_count).append(" ")
+                    .append(getSetMastCust.getBill_read_count()).append(" ")
                     .append(functionsCall.line(35));
             out.append(stringBuilder.toString());
             out.append("\r\n");

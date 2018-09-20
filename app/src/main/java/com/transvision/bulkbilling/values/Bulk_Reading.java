@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Handler;
 
+import com.transvision.bulkbilling.database.FTP_Database;
 import com.transvision.bulkbilling.database.Bulk_Database;
-import com.transvision.bulkbilling.database.Databasehelper;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 
 import static com.transvision.bulkbilling.extra.Constants.MAST_CUST_FILE_UPDATED;
@@ -15,34 +15,34 @@ import static com.transvision.bulkbilling.extra.Constants.SUBDIV_DETAILS_INSERT_
 
 public class Bulk_Reading {
 
-    public void read_cust_values(Context context, Databasehelper databasehelper, Handler handler) {
-        Bulk_Database bulkDatabase = new Bulk_Database(context);
-        bulkDatabase.openDatabase();
-        Cursor data = bulkDatabase.getBulk_records();
+    public void read_cust_values(Context context, Bulk_Database bulkDatabase, Handler handler) {
+        FTP_Database ftpDatabase = new FTP_Database(context);
+        ftpDatabase.openDatabase();
+        Cursor data = ftpDatabase.getBulk_records();
         if (data.getCount() > 0) {
             while (data.moveToNext()) {
                 GetSet_MastCust getSetMastCust = new GetSet_MastCust();
                 new GetSet_Mast_Values(handler).set_Mast_Cust_values(data, getSetMastCust);
-                insert_values(databasehelper, getSetMastCust);
+                insert_values(bulkDatabase, getSetMastCust);
             }
             data.close();
-            if (read_insert_subdiv_details(bulkDatabase, databasehelper, handler)) {
-                delete_bulk(bulkDatabase);
+            if (read_insert_subdiv_details(ftpDatabase, bulkDatabase, handler)) {
+                delete_bulk(ftpDatabase);
                 handler.sendEmptyMessage(MAST_CUST_FILE_UPDATED);
             } else {
-                delete_bulk(bulkDatabase);
+                delete_bulk(ftpDatabase);
                 handler.sendEmptyMessage(SUBDIV_DETAILS_INSERT_ERROR);
             }
         }
     }
 
-    private void delete_bulk(Bulk_Database bulkDatabase) {
-        bulkDatabase.close();
-        bulkDatabase.db_delete();
-        bulkDatabase.db_delete_journal();
+    private void delete_bulk(FTP_Database ftpDatabase) {
+        ftpDatabase.close();
+        ftpDatabase.db_delete();
+        ftpDatabase.db_delete_journal();
     }
 
-    private void insert_values(Databasehelper databasehelper, GetSet_MastCust getSetMastCust) {
+    private void insert_values(Bulk_Database bulkDatabase, GetSet_MastCust getSetMastCust) {
         ContentValues cv = new ContentValues();
         cv.put("MONTH", getSetMastCust.getMONTH());
         cv.put("READDATE", getSetMastCust.getREADDATE());
@@ -115,12 +115,12 @@ public class Bulk_Reading {
         cv.put("HOUSE_NO", getSetMastCust.getHOUSE_NO());
         cv.put("FDRCODE", getSetMastCust.getFDRCODE());
         cv.put("TCNAME", getSetMastCust.getTCNAME());
-        databasehelper.insertInCustTable(cv);
+        bulkDatabase.insertInCustTable(cv);
     }
 
-    public void read_out_values(Context context, Databasehelper databasehelper, Handler handler) {
+    public void read_out_values(Context context, Bulk_Database databasehelper, Handler handler) {
         FunctionsCall functionsCall = new FunctionsCall();
-        Bulk_Database bulkDatabase = new Bulk_Database(context);
+        FTP_Database bulkDatabase = new FTP_Database(context);
         bulkDatabase.openDatabase();
         Cursor data = databasehelper.getCustData();
         if (data.getCount() > 0) {
@@ -148,13 +148,13 @@ public class Bulk_Reading {
         }
     }
 
-    private boolean read_insert_subdiv_details(Bulk_Database bulkDatabase, Databasehelper databasehelper, Handler handler) {
+    private boolean read_insert_subdiv_details(FTP_Database ftpDatabase, Bulk_Database bulkDatabase, Handler handler) {
         GetSet_MastCust getSetMastCust = new GetSet_MastCust();
-        Cursor data = bulkDatabase.getSubdivision_details();
+        Cursor data = ftpDatabase.getSubdivision_details();
         data.moveToNext();
         GetSet_Mast_Values getSetMastValues = new GetSet_Mast_Values(handler);
         getSetMastValues.set_Subdiv_Details(data, getSetMastCust);
         data.close();
-        return getSetMastValues.insert_subdiv_details(databasehelper, getSetMastCust);
+        return getSetMastValues.insert_subdiv_details(bulkDatabase, getSetMastCust);
     }
 }

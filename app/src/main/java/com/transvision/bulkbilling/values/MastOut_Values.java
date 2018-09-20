@@ -2,14 +2,14 @@ package com.transvision.bulkbilling.values;
 
 import android.database.Cursor;
 
-import com.transvision.bulkbilling.database.Databasehelper;
+import com.transvision.bulkbilling.database.Bulk_Database;
 import com.transvision.bulkbilling.extra.FunctionsCall;
 
 public class MastOut_Values {
     private FunctionsCall functionsCall = new FunctionsCall();
 
-    public void getBilledValues(Databasehelper databasehelper, String account_id, GetSet_Mast_Out getSetMastOut) {
-        Cursor data = databasehelper.report(account_id);
+    public void getBilledValues(Bulk_Database bulkDatabase, String account_id, GetSet_Mast_Out getSetMastOut) {
+        Cursor data = bulkDatabase.report(account_id);
         if (data.getCount() > 0) {
             getSetMastOut.setMONTH(functionsCall.getCursorValue(data, "MONTH"));
             getSetMastOut.setREADDATE(functionsCall.getCursorValue(data, "READDATE"));
